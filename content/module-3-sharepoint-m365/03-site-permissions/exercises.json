@@ -1,1 +1,70 @@
-[]
+[
+  {
+    "id": "m3-l3-ex1",
+    "type": "syntax-check",
+    "prompt": "Write the command to list all SharePoint site groups on the current site.",
+    "hints": [
+      "PnP PowerShell has a cmdlet specifically for site groups.",
+      "The verb is Get and the noun starts with PnP.",
+      "Try: Get-PnPSiteGroup"
+    ],
+    "validation": [
+      { "rule": "contains", "value": "Get-PnPSiteGroup", "hintOnFail": "Use the Get-PnPSiteGroup cmdlet." }
+    ],
+    "solution": "Get-PnPSiteGroup",
+    "explanation": "Get-PnPSiteGroup returns all SharePoint groups associated with the current site, including Owners, Members, and Visitors."
+  },
+  {
+    "id": "m3-l3-ex2",
+    "type": "syntax-check",
+    "prompt": "Write the command to add the user 'jane@contoso.com' to the 'Project Owners' group.",
+    "hints": [
+      "Use Add-PnPGroupMember to add users to groups.",
+      "The -Group parameter specifies which group.",
+      "The -LoginName parameter specifies the user."
+    ],
+    "validation": [
+      { "rule": "contains", "value": "Add-PnPGroupMember", "hintOnFail": "Use the Add-PnPGroupMember cmdlet." },
+      { "rule": "regex", "pattern": "-Group\\s+[\"']Project Owners[\"']", "hintOnFail": "Specify -Group \"Project Owners\"." },
+      { "rule": "regex", "pattern": "-LoginName\\s+[\"']?jane@contoso\\.com[\"']?", "hintOnFail": "Specify -LoginName \"jane@contoso.com\"." }
+    ],
+    "solution": "Add-PnPGroupMember -Group \"Project Owners\" -LoginName \"jane@contoso.com\"",
+    "explanation": "Add-PnPGroupMember adds a user to a SharePoint group. The -LoginName accepts the user's email address or UPN."
+  },
+  {
+    "id": "m3-l3-ex3",
+    "type": "syntax-check",
+    "prompt": "Write the command to change the 'Interns' group permissions by adding the 'Read' role and removing the 'Edit' role.",
+    "hints": [
+      "Use Set-PnPGroupPermissions to modify group permissions.",
+      "The -Identity parameter identifies the group.",
+      "Use -AddRole and -RemoveRole to change permission levels."
+    ],
+    "validation": [
+      { "rule": "contains", "value": "Set-PnPGroupPermissions", "hintOnFail": "Use the Set-PnPGroupPermissions cmdlet." },
+      { "rule": "regex", "pattern": "-Identity\\s+[\"']?Interns[\"']?", "hintOnFail": "Specify the group with -Identity \"Interns\"." },
+      { "rule": "regex", "pattern": "-AddRole\\s+[\"']?Read[\"']?", "hintOnFail": "Add the Read role with -AddRole \"Read\"." },
+      { "rule": "regex", "pattern": "-RemoveRole\\s+[\"']?Edit[\"']?", "hintOnFail": "Remove the Edit role with -RemoveRole \"Edit\"." }
+    ],
+    "solution": "Set-PnPGroupPermissions -Identity \"Interns\" -AddRole \"Read\" -RemoveRole \"Edit\"",
+    "explanation": "Set-PnPGroupPermissions changes the permission levels assigned to a group. -AddRole grants a permission level while -RemoveRole revokes one."
+  },
+  {
+    "id": "m3-l3-ex4",
+    "type": "syntax-check",
+    "prompt": "Write the command to grant the user 'admin@contoso.com' View rights to a site design with ID 'abc-123-def'.",
+    "hints": [
+      "Use Grant-PnPSiteDesignRights to grant site design rights.",
+      "The -Identity parameter takes the site design ID.",
+      "Use -Principals for the user and -Rights for the access level."
+    ],
+    "validation": [
+      { "rule": "contains", "value": "Grant-PnPSiteDesignRights", "hintOnFail": "Use the Grant-PnPSiteDesignRights cmdlet." },
+      { "rule": "regex", "pattern": "-Identity\\s+[\"']?abc-123-def[\"']?", "hintOnFail": "Set -Identity to the site design ID 'abc-123-def'." },
+      { "rule": "regex", "pattern": "-Principals\\s+[\"']?admin@contoso\\.com[\"']?", "hintOnFail": "Set -Principals to 'admin@contoso.com'." },
+      { "rule": "regex", "pattern": "-Rights\\s+View", "hintOnFail": "Set -Rights to View." }
+    ],
+    "solution": "Grant-PnPSiteDesignRights -Identity \"abc-123-def\" -Principals \"admin@contoso.com\" -Rights View",
+    "explanation": "Grant-PnPSiteDesignRights controls who can see and apply custom site designs. The -Rights View parameter lets the specified user use the design when creating sites."
+  }
+]

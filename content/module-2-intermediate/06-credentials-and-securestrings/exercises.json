@@ -1,1 +1,91 @@
-[]
+[
+  {
+    "id": "m2-l6-ex1",
+    "type": "syntax-check",
+    "prompt": "Write a command that prompts for credentials with a username of 'CONTOSO\\Admin' and stores the result in $cred.",
+    "hints": [
+      "Use Get-Credential with the -UserName parameter.",
+      "Store the result in the $cred variable.",
+      "Try: $cred = Get-Credential -UserName 'CONTOSO\\Admin'"
+    ],
+    "validation": [
+      { "rule": "contains", "value": "$cred", "hintOnFail": "Store the credential in a variable called $cred." },
+      { "rule": "contains", "value": "Get-Credential", "hintOnFail": "Use Get-Credential to prompt for the password." },
+      { "rule": "regex", "pattern": "CONTOSO\\\\Admin", "hintOnFail": "Specify the username as 'CONTOSO\\Admin'." }
+    ],
+    "solution": "$cred = Get-Credential -UserName 'CONTOSO\\Admin'",
+    "explanation": "Get-Credential with -UserName pre-fills the username and only prompts for the password. The result is a PSCredential object stored in $cred."
+  },
+  {
+    "id": "m2-l6-ex2",
+    "type": "syntax-check",
+    "prompt": "Write commands that save a credential to a file using Export-Clixml, then load it back with Import-Clixml. Use the path '$HOME\\mycred.xml'.",
+    "hints": [
+      "First get the credential with Get-Credential and pipe to Export-Clixml.",
+      "Then use Import-Clixml to read it back.",
+      "Use -Path to specify the file location."
+    ],
+    "validation": [
+      { "rule": "contains", "value": "Get-Credential", "hintOnFail": "Use Get-Credential to create the credential." },
+      { "rule": "contains", "value": "Export-Clixml", "hintOnFail": "Use Export-Clixml to save the credential to a file." },
+      { "rule": "contains", "value": "Import-Clixml", "hintOnFail": "Use Import-Clixml to load the credential from the file." },
+      { "rule": "regex", "pattern": "mycred\\.xml", "hintOnFail": "Use the file path $HOME\\mycred.xml." }
+    ],
+    "solution": "Get-Credential | Export-Clixml -Path \"$HOME\\mycred.xml\"\n$cred = Import-Clixml -Path \"$HOME\\mycred.xml\"",
+    "explanation": "Export-Clixml serializes the PSCredential object to XML with the password encrypted via DPAPI. Import-Clixml deserializes it back. Only the same user on the same machine can decrypt it."
+  },
+  {
+    "id": "m2-l6-ex3",
+    "type": "syntax-check",
+    "prompt": "Write a command that creates a PSCredential object manually from a $username variable and a SecureString $securePass variable using [PSCredential]::new().",
+    "hints": [
+      "Use [PSCredential]::new() with two arguments.",
+      "The first argument is the username string.",
+      "The second argument is the SecureString password."
+    ],
+    "validation": [
+      { "rule": "contains", "value": "[PSCredential]", "hintOnFail": "Use the [PSCredential] type." },
+      { "rule": "regex", "pattern": "::new\\(", "hintOnFail": "Use ::new() to call the constructor." },
+      { "rule": "contains", "value": "$username", "hintOnFail": "Pass $username as the first argument." },
+      { "rule": "contains", "value": "$securePass", "hintOnFail": "Pass $securePass as the second argument." }
+    ],
+    "solution": "$cred = [PSCredential]::new($username, $securePass)",
+    "explanation": "The PSCredential constructor takes a username string and a SecureString password. This is useful when you already have the components from other sources like Read-Host -AsSecureString."
+  },
+  {
+    "id": "m2-l6-ex4",
+    "type": "syntax-check",
+    "prompt": "Write a command that uses Read-Host to prompt for a password and store it as a SecureString in a variable called $securePass.",
+    "hints": [
+      "Use Read-Host with the -AsSecureString switch.",
+      "The -Prompt parameter specifies the message shown to the user.",
+      "Store the result in $securePass."
+    ],
+    "validation": [
+      { "rule": "contains", "value": "$securePass", "hintOnFail": "Store the result in $securePass." },
+      { "rule": "contains", "value": "Read-Host", "hintOnFail": "Use Read-Host to get input from the user." },
+      { "rule": "contains", "value": "-AsSecureString", "hintOnFail": "Use -AsSecureString to mask the input and store it securely." }
+    ],
+    "solution": "$securePass = Read-Host -Prompt 'Enter password' -AsSecureString",
+    "explanation": "Read-Host with -AsSecureString masks the user's input (showing asterisks) and returns a SecureString object instead of a plain-text string."
+  },
+  {
+    "id": "m2-l6-ex5",
+    "type": "syntax-check",
+    "prompt": "Write a command that uses Invoke-Command to run 'Get-Process' on 'Server01' using a credential loaded from '$HOME\\cred.xml' with Import-Clixml.",
+    "hints": [
+      "First load the credential with Import-Clixml.",
+      "Then use Invoke-Command with -Credential.",
+      "The -ScriptBlock should contain { Get-Process }."
+    ],
+    "validation": [
+      { "rule": "contains", "value": "Import-Clixml", "hintOnFail": "Use Import-Clixml to load the saved credential." },
+      { "rule": "contains", "value": "Invoke-Command", "hintOnFail": "Use Invoke-Command to run the remote command." },
+      { "rule": "contains", "value": "-Credential", "hintOnFail": "Pass the credential with -Credential." },
+      { "rule": "contains", "value": "Get-Process", "hintOnFail": "Run Get-Process in the script block." },
+      { "rule": "contains", "value": "Server01", "hintOnFail": "Target the computer Server01." }
+    ],
+    "solution": "$cred = Import-Clixml -Path \"$HOME\\cred.xml\"\nInvoke-Command -ComputerName Server01 -Credential $cred -ScriptBlock { Get-Process }",
+    "explanation": "Import-Clixml loads the encrypted credential from disk. The PSCredential object is passed to Invoke-Command via -Credential, authenticating against the remote machine without prompting."
+  }
+]

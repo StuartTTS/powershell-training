@@ -1,1 +1,71 @@
-[]
+[
+  {
+    "id": "m3-l1-ex1",
+    "type": "syntax-check",
+    "prompt": "Write the command to install the PnP.PowerShell module for the current user only.",
+    "hints": [
+      "Use Install-Module to install modules from the PowerShell Gallery.",
+      "The module name is PnP.PowerShell (with a dot, not a hyphen).",
+      "Add -Scope CurrentUser to avoid needing admin privileges."
+    ],
+    "validation": [
+      { "rule": "contains", "value": "Install-Module", "hintOnFail": "Use the Install-Module cmdlet." },
+      { "rule": "contains", "value": "PnP.PowerShell", "hintOnFail": "The module name is PnP.PowerShell." },
+      { "rule": "regex", "pattern": "-Scope\\s+CurrentUser", "hintOnFail": "Add -Scope CurrentUser to install for the current user only." }
+    ],
+    "solution": "Install-Module PnP.PowerShell -Scope CurrentUser",
+    "explanation": "Install-Module downloads the PnP.PowerShell module from the PowerShell Gallery. The -Scope CurrentUser flag installs it without requiring administrator privileges."
+  },
+  {
+    "id": "m3-l1-ex2",
+    "type": "syntax-check",
+    "prompt": "Write the command to connect to the SharePoint site https://contoso.sharepoint.com/sites/IT using interactive browser authentication.",
+    "hints": [
+      "The PnP cmdlet for connecting is Connect-PnPOnline.",
+      "Use -Url to specify the SharePoint site URL.",
+      "Use -Interactive for browser-based sign-in."
+    ],
+    "validation": [
+      { "rule": "contains", "value": "Connect-PnPOnline", "hintOnFail": "Use the Connect-PnPOnline cmdlet." },
+      { "rule": "contains", "value": "https://contoso.sharepoint.com/sites/IT", "hintOnFail": "Include the full SharePoint site URL." },
+      { "rule": "contains", "value": "-Interactive", "hintOnFail": "Add -Interactive for browser-based authentication." }
+    ],
+    "solution": "Connect-PnPOnline -Url \"https://contoso.sharepoint.com/sites/IT\" -Interactive",
+    "explanation": "Connect-PnPOnline establishes a connection to a specific SharePoint site. The -Interactive parameter opens a browser window for you to sign in with your credentials."
+  },
+  {
+    "id": "m3-l1-ex3",
+    "type": "syntax-check",
+    "prompt": "Write the command to connect to Microsoft Graph with scopes for reading all users and reading all groups.",
+    "hints": [
+      "Use Connect-MgGraph with the -Scopes parameter.",
+      "The scope for reading users is User.Read.All.",
+      "The scope for reading groups is Group.Read.All."
+    ],
+    "validation": [
+      { "rule": "contains", "value": "Connect-MgGraph", "hintOnFail": "Use the Connect-MgGraph cmdlet." },
+      { "rule": "contains", "value": "-Scopes", "hintOnFail": "Specify the -Scopes parameter." },
+      { "rule": "contains", "value": "User.Read.All", "hintOnFail": "Include User.Read.All in your scopes." },
+      { "rule": "contains", "value": "Group.Read.All", "hintOnFail": "Include Group.Read.All in your scopes." }
+    ],
+    "solution": "Connect-MgGraph -Scopes \"User.Read.All\", \"Group.Read.All\"",
+    "explanation": "Connect-MgGraph authenticates to Microsoft Graph. The -Scopes parameter defines what permissions your session requests. Always request only the permissions you need."
+  },
+  {
+    "id": "m3-l1-ex4",
+    "type": "syntax-check",
+    "prompt": "Write two commands on separate lines: first disconnect from PnP, then disconnect from Microsoft Graph.",
+    "hints": [
+      "Use Disconnect-PnPOnline for PnP.PowerShell.",
+      "Use Disconnect-MgGraph for Microsoft Graph.",
+      "Write each command on its own line."
+    ],
+    "validation": [
+      { "rule": "contains", "value": "Disconnect-PnPOnline", "hintOnFail": "Include Disconnect-PnPOnline to end the PnP session." },
+      { "rule": "contains", "value": "Disconnect-MgGraph", "hintOnFail": "Include Disconnect-MgGraph to end the Graph session." },
+      { "rule": "order", "sequence": ["Disconnect-PnPOnline", "Disconnect-MgGraph"], "hintOnFail": "Disconnect from PnP first, then from Microsoft Graph." }
+    ],
+    "solution": "Disconnect-PnPOnline\nDisconnect-MgGraph",
+    "explanation": "Always disconnect when finished. Disconnect-PnPOnline clears the PnP session token, and Disconnect-MgGraph clears the Graph session token."
+  }
+]

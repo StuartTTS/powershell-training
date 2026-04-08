@@ -1,1 +1,88 @@
-[]
+[
+  {
+    "id": "m1-l9-ex1",
+    "type": "syntax-check",
+    "prompt": "Write a command to list all modules currently loaded in your PowerShell session.",
+    "hints": [
+      "Use the Get-Module cmdlet.",
+      "Without any extra parameters, Get-Module shows loaded modules.",
+      "You do not need -ListAvailable for currently loaded modules."
+    ],
+    "validation": [
+      { "rule": "contains", "value": "Get-Module", "hintOnFail": "Use the Get-Module cmdlet." },
+      { "rule": "forbidden", "value": "-ListAvailable", "hintOnFail": "Do not use -ListAvailable — that shows all installed modules, not just loaded ones." }
+    ],
+    "solution": "Get-Module",
+    "explanation": "Get-Module without parameters lists only the modules currently loaded in the session. Add -ListAvailable to see all installed modules."
+  },
+  {
+    "id": "m1-l9-ex2",
+    "type": "syntax-check",
+    "prompt": "Write a command to search the PowerShell Gallery for modules with names containing 'SharePoint'.",
+    "hints": [
+      "Use Find-Module to search the online gallery.",
+      "Use the -Name parameter with a wildcard pattern.",
+      "Wildcards in PowerShell use the * character."
+    ],
+    "validation": [
+      { "rule": "contains", "value": "Find-Module", "hintOnFail": "Use Find-Module to search the PowerShell Gallery." },
+      { "rule": "regex", "pattern": "\\*?SharePoint\\*?", "hintOnFail": "Search for modules containing 'SharePoint' (use wildcards like *SharePoint*)." }
+    ],
+    "solution": "Find-Module -Name '*SharePoint*'",
+    "explanation": "Find-Module searches the PowerShell Gallery (PSGallery) for modules matching the pattern. Wildcards let you find modules even when you don't know the exact name."
+  },
+  {
+    "id": "m1-l9-ex3",
+    "type": "syntax-check",
+    "prompt": "Write a command to install the 'PnP.PowerShell' module for the current user only (without requiring admin privileges).",
+    "hints": [
+      "Use Install-Module with the -Name parameter.",
+      "Add -Scope CurrentUser to install without admin rights.",
+      "The module name is PnP.PowerShell."
+    ],
+    "validation": [
+      { "rule": "contains", "value": "Install-Module", "hintOnFail": "Use the Install-Module cmdlet." },
+      { "rule": "regex", "pattern": "PnP\\.PowerShell", "hintOnFail": "Specify the module name as PnP.PowerShell." },
+      { "rule": "regex", "pattern": "-Scope\\s+CurrentUser", "hintOnFail": "Add -Scope CurrentUser to install without administrator privileges." }
+    ],
+    "solution": "Install-Module -Name PnP.PowerShell -Scope CurrentUser",
+    "explanation": "Install-Module downloads the module from the PowerShell Gallery and installs it. -Scope CurrentUser places it in your personal module directory, so no admin elevation is needed."
+  },
+  {
+    "id": "m1-l9-ex4",
+    "type": "syntax-check",
+    "prompt": "Write a command to explicitly import the 'Microsoft.Graph' module into your current session.",
+    "hints": [
+      "Use Import-Module to load a module.",
+      "Specify the module name with -Name.",
+      "This forces the module to load even if it hasn't been auto-imported yet."
+    ],
+    "validation": [
+      { "rule": "contains", "value": "Import-Module", "hintOnFail": "Use the Import-Module cmdlet." },
+      { "rule": "regex", "pattern": "Microsoft\\.Graph", "hintOnFail": "Specify Microsoft.Graph as the module name." }
+    ],
+    "solution": "Import-Module -Name Microsoft.Graph",
+    "explanation": "Import-Module explicitly loads a module and all its commands into the current session. This is useful at the top of scripts to ensure dependencies are available."
+  },
+  {
+    "id": "m1-l9-ex5",
+    "type": "syntax-check",
+    "prompt": "Write a command to show all installed versions of the 'Az' module on your system, displaying the Name and Version properties.",
+    "hints": [
+      "Use Get-Module with -ListAvailable to see installed modules.",
+      "Specify -Name Az to filter to just that module.",
+      "Pipe to Select-Object to pick the Name and Version properties."
+    ],
+    "validation": [
+      { "rule": "contains", "value": "Get-Module", "hintOnFail": "Use Get-Module to find installed modules." },
+      { "rule": "contains", "value": "-ListAvailable", "hintOnFail": "Add -ListAvailable to see all installed modules, not just loaded ones." },
+      { "rule": "regex", "pattern": "-Name\\s+['\"]?Az['\"]?", "hintOnFail": "Filter by module name Az using the -Name parameter." },
+      { "rule": "contains", "value": "Select-Object", "hintOnFail": "Pipe to Select-Object to display specific properties." },
+      { "rule": "structure", "check": "has-pipeline", "hintOnFail": "Use the pipeline | to connect Get-Module to Select-Object." },
+      { "rule": "regex", "pattern": "Name", "hintOnFail": "Include the Name property in Select-Object." },
+      { "rule": "regex", "pattern": "Version", "hintOnFail": "Include the Version property in Select-Object." }
+    ],
+    "solution": "Get-Module -Name Az -ListAvailable | Select-Object Name, Version",
+    "explanation": "Get-Module -ListAvailable shows all installed versions of a module. Piping to Select-Object Name, Version gives a clean summary of what is available on your system."
+  }
+]

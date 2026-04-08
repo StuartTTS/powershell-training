@@ -1,1 +1,93 @@
-[]
+[
+  {
+    "id": "m1-l5-ex1",
+    "type": "syntax-check",
+    "prompt": "Write an if/elseif/else block that checks the variable $score: if $score is greater than or equal to 90, output \"A\"; elseif $score is greater than or equal to 80, output \"B\"; else output \"F\".",
+    "hints": [
+      "Start with if ($score -ge 90) { ... }",
+      "Follow with elseif ($score -ge 80) { ... }",
+      "End with else { ... }"
+    ],
+    "validation": [
+      { "rule": "regex", "pattern": "if\\s*\\(\\s*\\$score\\s+-ge\\s+90\\s*\\)", "hintOnFail": "Start with: if ($score -ge 90)" },
+      { "rule": "regex", "pattern": "elseif\\s*\\(\\s*\\$score\\s+-ge\\s+80\\s*\\)", "hintOnFail": "Add: elseif ($score -ge 80)" },
+      { "rule": "contains", "value": "else", "hintOnFail": "Include an else block for the default case." },
+      { "rule": "regex", "pattern": "[\"']A[\"']", "hintOnFail": "Output \"A\" for scores >= 90." },
+      { "rule": "regex", "pattern": "[\"']B[\"']", "hintOnFail": "Output \"B\" for scores >= 80." },
+      { "rule": "regex", "pattern": "[\"']F[\"']", "hintOnFail": "Output \"F\" for the else case." }
+    ],
+    "solution": "if ($score -ge 90) {\n    \"A\"\n} elseif ($score -ge 80) {\n    \"B\"\n} else {\n    \"F\"\n}",
+    "explanation": "The if/elseif/else chain evaluates conditions top to bottom and executes the first block whose condition is $true. The else block runs when no conditions match."
+  },
+  {
+    "id": "m1-l5-ex2",
+    "type": "syntax-check",
+    "prompt": "Write a switch statement that checks the variable $status. If \"Running\", output \"Service is active\". If \"Stopped\", output \"Service is inactive\". Include a default case that outputs \"Unknown status\".",
+    "hints": [
+      "Syntax: switch ($variable) { 'value' { action } }",
+      "Use 'default' for the fallback case.",
+      "Remember to include the curly braces around each action."
+    ],
+    "validation": [
+      { "rule": "regex", "pattern": "switch\\s*\\(\\s*\\$status\\s*\\)", "hintOnFail": "Start with: switch ($status)" },
+      { "rule": "regex", "pattern": "[\"']Running[\"']\\s*\\{", "hintOnFail": "Add a case for \"Running\" with a script block." },
+      { "rule": "regex", "pattern": "[\"']Stopped[\"']\\s*\\{", "hintOnFail": "Add a case for \"Stopped\" with a script block." },
+      { "rule": "regex", "pattern": "default\\s*\\{", "hintOnFail": "Include a default case for unmatched values." }
+    ],
+    "solution": "switch ($status) {\n    \"Running\" { \"Service is active\" }\n    \"Stopped\" { \"Service is inactive\" }\n    default { \"Unknown status\" }\n}",
+    "explanation": "The switch statement compares $status against each case. The default block runs when none of the cases match, similar to else in an if statement."
+  },
+  {
+    "id": "m1-l5-ex3",
+    "type": "syntax-check",
+    "prompt": "Write a foreach loop that iterates over the array $names and outputs \"Hello, <name>\" for each element. Use the loop variable $name.",
+    "hints": [
+      "Syntax: foreach ($item in $collection) { ... }",
+      "Use double quotes for string expansion: \"Hello, $name\"",
+      "The loop variable is $name and the collection is $names."
+    ],
+    "validation": [
+      { "rule": "regex", "pattern": "foreach\\s*\\(\\s*\\$name\\s+in\\s+\\$names\\s*\\)", "hintOnFail": "Use: foreach ($name in $names)" },
+      { "rule": "regex", "pattern": "[\"']Hello,\\s*\\$name[\"']", "hintOnFail": "Output \"Hello, $name\" inside the loop body." }
+    ],
+    "solution": "foreach ($name in $names) {\n    \"Hello, $name\"\n}",
+    "explanation": "The foreach loop assigns each element of $names to $name in turn, then executes the script block. Double-quoted strings expand $name to its current value."
+  },
+  {
+    "id": "m1-l5-ex4",
+    "type": "syntax-check",
+    "prompt": "Write a for loop that counts from 1 to 5 (inclusive) and outputs each number. Use $i as the loop variable.",
+    "hints": [
+      "Syntax: for ($i = start; $i -le end; $i++) { ... }",
+      "Start at 1 and go up to 5 using -le.",
+      "Output $i inside the loop body."
+    ],
+    "validation": [
+      { "rule": "regex", "pattern": "for\\s*\\(", "hintOnFail": "Start with the for keyword followed by parentheses." },
+      { "rule": "regex", "pattern": "\\$i\\s*=\\s*1", "hintOnFail": "Initialize $i to 1." },
+      { "rule": "regex", "pattern": "\\$i\\s+-le\\s+5", "hintOnFail": "Continue while $i is less than or equal to 5." },
+      { "rule": "regex", "pattern": "\\$i\\+\\+", "hintOnFail": "Increment $i with $i++ in the for statement." }
+    ],
+    "solution": "for ($i = 1; $i -le 5; $i++) {\n    $i\n}",
+    "explanation": "The for loop has three parts in its parentheses: initialization ($i = 1), condition ($i -le 5), and increment ($i++). The body executes as long as the condition is $true."
+  },
+  {
+    "id": "m1-l5-ex5",
+    "type": "syntax-check",
+    "prompt": "Write a foreach loop over the numbers 1 to 10 that uses 'continue' to skip even numbers and 'break' to stop when the number reaches 8. Use $n as the loop variable and 1..10 as the range.",
+    "hints": [
+      "Use $n % 2 -eq 0 to check for even numbers.",
+      "Put 'continue' inside an if block to skip even numbers.",
+      "Put 'break' inside an if block to stop at 8."
+    ],
+    "validation": [
+      { "rule": "regex", "pattern": "foreach\\s*\\(\\s*\\$n\\s+in\\s+1\\.\\.10\\s*\\)", "hintOnFail": "Use: foreach ($n in 1..10)" },
+      { "rule": "contains", "value": "continue", "hintOnFail": "Use 'continue' to skip even numbers." },
+      { "rule": "contains", "value": "break", "hintOnFail": "Use 'break' to stop the loop at 8." },
+      { "rule": "regex", "pattern": "\\$n\\s*%\\s*2\\s*-eq\\s*0", "hintOnFail": "Check for even numbers with: $n % 2 -eq 0" },
+      { "rule": "order", "sequence": ["foreach", "continue", "break"], "hintOnFail": "Place 'continue' (skip evens) before 'break' (stop at 8) in the loop body." }
+    ],
+    "solution": "foreach ($n in 1..10) {\n    if ($n % 2 -eq 0) { continue }\n    if ($n -eq 8) { break }\n    $n\n}",
+    "explanation": "The 'continue' keyword skips the rest of the loop body for even numbers, jumping to the next iteration. The 'break' keyword exits the loop entirely when $n reaches 8. Only odd numbers 1, 3, 5, 7 are output."
+  }
+]

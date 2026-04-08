@@ -1,1 +1,76 @@
-[]
+[
+  {
+    "id": "m1-l6-ex1",
+    "type": "syntax-check",
+    "prompt": "Write a function called Get-Greeting that takes a [string] parameter called $Name and outputs \"Hello, $Name!\" using string interpolation.",
+    "hints": [
+      "Start with the function keyword followed by the name Get-Greeting.",
+      "Inside the function, use a param() block to declare [string]$Name.",
+      "Use double quotes for string interpolation: \"Hello, $Name!\""
+    ],
+    "validation": [
+      { "rule": "structure", "check": "has-function", "hintOnFail": "Your answer must define a function using the function keyword." },
+      { "rule": "contains", "value": "Get-Greeting", "hintOnFail": "Name your function Get-Greeting (following Verb-Noun convention)." },
+      { "rule": "structure", "check": "has-param-block", "hintOnFail": "Use a param() block to declare your parameter." },
+      { "rule": "regex", "pattern": "\\[string\\]", "hintOnFail": "Add the [string] type constraint to the $Name parameter." },
+      { "rule": "regex", "pattern": "\\$Name", "hintOnFail": "Name the parameter $Name." }
+    ],
+    "solution": "function Get-Greeting {\n    param(\n        [string]$Name\n    )\n    \"Hello, $Name!\"\n}",
+    "explanation": "The function keyword defines a reusable block. The param() block declares a typed [string] parameter $Name. Double-quoted strings expand the variable at runtime."
+  },
+  {
+    "id": "m1-l6-ex2",
+    "type": "syntax-check",
+    "prompt": "Modify the Get-Greeting function so that $Name is mandatory and defaults to no value. Add the [Parameter(Mandatory)] attribute.",
+    "hints": [
+      "Place [Parameter(Mandatory)] on the line above the parameter declaration.",
+      "The attribute goes inside the param() block, right before [string]$Name.",
+      "Mandatory means PowerShell will prompt the user if they don't provide -Name."
+    ],
+    "validation": [
+      { "rule": "structure", "check": "has-function", "hintOnFail": "Your answer must define a function." },
+      { "rule": "structure", "check": "has-param-block", "hintOnFail": "Use a param() block to declare parameters." },
+      { "rule": "regex", "pattern": "\\[Parameter\\(\\s*Mandatory", "hintOnFail": "Add the [Parameter(Mandatory)] attribute before the $Name parameter." },
+      { "rule": "regex", "pattern": "\\[string\\]\\s*\\$Name", "hintOnFail": "Keep the [string] type constraint on $Name." }
+    ],
+    "solution": "function Get-Greeting {\n    param(\n        [Parameter(Mandatory)]\n        [string]$Name\n    )\n    \"Hello, $Name!\"\n}",
+    "explanation": "[Parameter(Mandatory)] tells PowerShell that $Name must be provided. If the caller omits it, PowerShell prompts for the value interactively."
+  },
+  {
+    "id": "m1-l6-ex3",
+    "type": "syntax-check",
+    "prompt": "Write a function called Get-Rectangle-Area that takes two [int] parameters, $Width and $Height, and returns their product (the area).",
+    "hints": [
+      "Declare two parameters in the param() block separated by a comma.",
+      "Both parameters should have the [int] type constraint.",
+      "To return the area, simply write the expression $Width * $Height."
+    ],
+    "validation": [
+      { "rule": "structure", "check": "has-function", "hintOnFail": "Use the function keyword to define your function." },
+      { "rule": "regex", "pattern": "\\[int\\]\\s*\\$Width", "hintOnFail": "Declare an [int] parameter named $Width." },
+      { "rule": "regex", "pattern": "\\[int\\]\\s*\\$Height", "hintOnFail": "Declare an [int] parameter named $Height." },
+      { "rule": "regex", "pattern": "\\$Width\\s*\\*\\s*\\$Height", "hintOnFail": "Multiply $Width by $Height to calculate the area." }
+    ],
+    "solution": "function Get-Rectangle-Area {\n    param(\n        [int]$Width,\n        [int]$Height\n    )\n    $Width * $Height\n}",
+    "explanation": "The function declares two [int] parameters. The expression $Width * $Height is output automatically since it is not captured by a variable."
+  },
+  {
+    "id": "m1-l6-ex4",
+    "type": "syntax-check",
+    "prompt": "Write a function called Get-FileSize that takes a mandatory [string] parameter $Path with a default value of 'C:\\temp'. The function should return the string \"Path: $Path\".",
+    "hints": [
+      "You can have both [Parameter(Mandatory)] and a default value, though in practice Mandatory overrides the default.",
+      "Use = 'C:\\temp' after $Path to set the default.",
+      "A mandatory parameter with a default still requires the attribute declaration."
+    ],
+    "validation": [
+      { "rule": "structure", "check": "has-function", "hintOnFail": "Use the function keyword to define your function." },
+      { "rule": "contains", "value": "Get-FileSize", "hintOnFail": "Name your function Get-FileSize." },
+      { "rule": "regex", "pattern": "\\[Parameter\\(\\s*Mandatory", "hintOnFail": "Add the [Parameter(Mandatory)] attribute." },
+      { "rule": "regex", "pattern": "\\[string\\]\\s*\\$Path", "hintOnFail": "Declare a [string] parameter named $Path." },
+      { "rule": "regex", "pattern": "=\\s*['\"]C:\\\\temp['\"]", "hintOnFail": "Set the default value of $Path to 'C:\\temp'." }
+    ],
+    "solution": "function Get-FileSize {\n    param(\n        [Parameter(Mandatory)]\n        [string]$Path = 'C:\\temp'\n    )\n    \"Path: $Path\"\n}",
+    "explanation": "This combines [Parameter(Mandatory)] with a default value. The [string] type ensures only string values are accepted. The default is used if the function is called programmatically without the parameter."
+  }
+]

@@ -1,1 +1,85 @@
-[]
+[
+  {
+    "id": "m1-l4-ex1",
+    "type": "syntax-check",
+    "prompt": "Write a comparison expression that checks if the variable $age is greater than or equal to 18.",
+    "hints": [
+      "Use the -ge operator for 'greater than or equal to'.",
+      "PowerShell comparison operators start with a dash.",
+      "Try: $age -ge 18"
+    ],
+    "validation": [
+      { "rule": "regex", "pattern": "\\$age\\s+-ge\\s+18", "hintOnFail": "Use $age -ge 18 to check if $age is greater than or equal to 18." }
+    ],
+    "solution": "$age -ge 18",
+    "explanation": "The -ge operator returns $true if the left operand is greater than or equal to the right operand."
+  },
+  {
+    "id": "m1-l4-ex2",
+    "type": "syntax-check",
+    "prompt": "Write an expression using -like to check if the variable $filename ends with \".ps1\" (use a wildcard pattern).",
+    "hints": [
+      "The -like operator uses wildcard patterns.",
+      "The * wildcard matches any number of characters.",
+      "Try: $filename -like \"*.ps1\""
+    ],
+    "validation": [
+      { "rule": "contains", "value": "-like", "hintOnFail": "Use the -like operator for wildcard matching." },
+      { "rule": "regex", "pattern": "\\$filename\\s+-like", "hintOnFail": "Compare $filename using -like." },
+      { "rule": "regex", "pattern": "[\"']\\*\\.ps1[\"']", "hintOnFail": "Use the wildcard pattern \"*.ps1\" to match files ending in .ps1." }
+    ],
+    "solution": "$filename -like \"*.ps1\"",
+    "explanation": "The -like operator uses wildcard patterns where * matches any number of characters. This checks if $filename ends with .ps1."
+  },
+  {
+    "id": "m1-l4-ex3",
+    "type": "syntax-check",
+    "prompt": "Use -match with a regular expression to check if $email contains an @ symbol followed by at least one character, a dot, and more characters (basic email pattern).",
+    "hints": [
+      "The -match operator uses regular expressions.",
+      "The @ symbol is literal in regex. Use \\. for a literal dot.",
+      "Try: $email -match \"@.+\\..+\""
+    ],
+    "validation": [
+      { "rule": "contains", "value": "-match", "hintOnFail": "Use the -match operator for regex matching." },
+      { "rule": "regex", "pattern": "\\$email\\s+-match", "hintOnFail": "Compare $email using -match." },
+      { "rule": "regex", "pattern": "@", "hintOnFail": "Your regex pattern should include @ to match the email format." }
+    ],
+    "solution": "$email -match \"@.+\\..+\"",
+    "explanation": "The -match operator tests the string against a regular expression. This pattern checks for @ followed by characters, a dot, and more characters — a basic email validation."
+  },
+  {
+    "id": "m1-l4-ex4",
+    "type": "syntax-check",
+    "prompt": "Write an expression using -replace to change all hyphens (-) to underscores (_) in the variable $filename.",
+    "hints": [
+      "The -replace operator takes a pattern and a replacement string.",
+      "Syntax: $variable -replace 'find', 'replace'",
+      "Try: $filename -replace \"-\", \"_\""
+    ],
+    "validation": [
+      { "rule": "contains", "value": "-replace", "hintOnFail": "Use the -replace operator." },
+      { "rule": "regex", "pattern": "\\$filename\\s+-replace", "hintOnFail": "Apply -replace to the $filename variable." },
+      { "rule": "regex", "pattern": "-replace\\s+[\"']-[\"']\\s*,\\s*[\"']_[\"']", "hintOnFail": "Replace \"-\" with \"_\". Syntax: -replace \"-\", \"_\"" }
+    ],
+    "solution": "$filename -replace \"-\", \"_\"",
+    "explanation": "The -replace operator uses regex to find matches and replaces them with the specified string. Here it swaps every hyphen for an underscore."
+  },
+  {
+    "id": "m1-l4-ex5",
+    "type": "syntax-check",
+    "prompt": "Write a compound condition that checks if $temperature is greater than 0 AND less than 100. Use -and to combine the two comparisons.",
+    "hints": [
+      "Use -gt for greater than and -lt for less than.",
+      "Combine two conditions with -and.",
+      "Wrap each comparison in parentheses: ($temp -gt 0) -and ($temp -lt 100)"
+    ],
+    "validation": [
+      { "rule": "contains", "value": "-and", "hintOnFail": "Use the -and logical operator to combine conditions." },
+      { "rule": "regex", "pattern": "\\$temperature\\s+-gt\\s+0", "hintOnFail": "Check that $temperature is greater than 0 using -gt." },
+      { "rule": "regex", "pattern": "\\$temperature\\s+-lt\\s+100", "hintOnFail": "Check that $temperature is less than 100 using -lt." }
+    ],
+    "solution": "($temperature -gt 0) -and ($temperature -lt 100)",
+    "explanation": "The -and operator returns $true only when both conditions are $true. Parentheses group each comparison for clarity and correct evaluation order."
+  }
+]

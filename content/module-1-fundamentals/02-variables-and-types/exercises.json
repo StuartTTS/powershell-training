@@ -1,1 +1,67 @@
-[]
+[
+  {
+    "id": "m1-l2-ex1",
+    "type": "syntax-check",
+    "prompt": "Create a variable called $greeting and assign it the value \"Hello, World!\".",
+    "hints": [
+      "Variable names in PowerShell start with $.",
+      "Use the = operator to assign a value.",
+      "Strings are wrapped in quotes."
+    ],
+    "validation": [
+      { "rule": "regex", "pattern": "\\$greeting\\s*=", "hintOnFail": "Name the variable $greeting and use = to assign a value." },
+      { "rule": "regex", "pattern": "[\"']Hello,\\s*World![\"']", "hintOnFail": "Assign the string \"Hello, World!\" as the value." }
+    ],
+    "solution": "$greeting = \"Hello, World!\"",
+    "explanation": "Variables are created by assigning a value with the $ prefix and = operator. No declaration keyword is needed."
+  },
+  {
+    "id": "m1-l2-ex2",
+    "type": "syntax-check",
+    "prompt": "Create a variable $port constrained to the [int] type and assign it the value 443.",
+    "hints": [
+      "Place the type accelerator before the variable name.",
+      "Type accelerators use square brackets, like [int].",
+      "Try: [int]$port = 443"
+    ],
+    "validation": [
+      { "rule": "regex", "pattern": "\\[int\\]\\s*\\$port", "hintOnFail": "Use [int] before $port to constrain its type." },
+      { "rule": "contains", "value": "443", "hintOnFail": "Assign the value 443." }
+    ],
+    "solution": "[int]$port = 443",
+    "explanation": "Placing [int] before the variable name constrains it to only accept integer values. Assigning a non-convertible value later will cause an error."
+  },
+  {
+    "id": "m1-l2-ex3",
+    "type": "syntax-check",
+    "prompt": "Cast the string \"2025-06-15\" to a [datetime] and store it in a variable called $releaseDate.",
+    "hints": [
+      "Use [datetime] as the type accelerator.",
+      "Place it before the variable name or before the value.",
+      "Try: [datetime]$releaseDate = \"2025-06-15\""
+    ],
+    "validation": [
+      { "rule": "regex", "pattern": "\\[datetime\\]", "hintOnFail": "Use [datetime] to cast the string to a DateTime object." },
+      { "rule": "regex", "pattern": "\\$releaseDate\\s*=", "hintOnFail": "Store the result in a variable named $releaseDate." },
+      { "rule": "contains", "value": "2025-06-15", "hintOnFail": "Use the date string \"2025-06-15\"." }
+    ],
+    "solution": "[datetime]$releaseDate = \"2025-06-15\"",
+    "explanation": "PowerShell can parse common date string formats and convert them to [datetime] objects automatically when you specify the type."
+  },
+  {
+    "id": "m1-l2-ex4",
+    "type": "syntax-check",
+    "prompt": "Write an expression that checks whether the variable $result is $null. Place $null on the left side of the comparison, as recommended.",
+    "hints": [
+      "Use the -eq comparison operator.",
+      "Best practice is to put $null on the left: $null -eq $variable.",
+      "This avoids unexpected behavior when the variable is an array."
+    ],
+    "validation": [
+      { "rule": "regex", "pattern": "\\$null\\s+-eq\\s+\\$result", "hintOnFail": "Place $null on the left side: $null -eq $result." },
+      { "rule": "forbidden", "value": "$result -eq", "hintOnFail": "Put $null on the left side of the comparison, not $result." }
+    ],
+    "solution": "$null -eq $result",
+    "explanation": "Placing $null on the left side prevents unexpected behavior when $result is an array, because -eq against an array filters elements rather than performing a simple equality check."
+  }
+]

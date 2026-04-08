@@ -1,1 +1,75 @@
-[]
+[
+  {
+    "id": "m3-l2-ex1",
+    "type": "syntax-check",
+    "prompt": "Write a command to get the current SharePoint web and display only its Title and Url properties.",
+    "hints": [
+      "Start with Get-PnPWeb to get the current web object.",
+      "Pipe to Select-Object to choose specific properties.",
+      "The properties to select are Title and Url."
+    ],
+    "validation": [
+      { "rule": "contains", "value": "Get-PnPWeb", "hintOnFail": "Use Get-PnPWeb to retrieve the current web." },
+      { "rule": "contains", "value": "|", "hintOnFail": "Pipe the result using | to another cmdlet." },
+      { "rule": "contains", "value": "Select-Object", "hintOnFail": "Use Select-Object to choose which properties to display." },
+      { "rule": "contains", "value": "Title", "hintOnFail": "Include the Title property." },
+      { "rule": "contains", "value": "Url", "hintOnFail": "Include the Url property." }
+    ],
+    "solution": "Get-PnPWeb | Select-Object Title, Url",
+    "explanation": "Get-PnPWeb returns the current web object. Piping to Select-Object Title, Url filters the output to show only those two properties."
+  },
+  {
+    "id": "m3-l2-ex2",
+    "type": "syntax-check",
+    "prompt": "Write the command to create a new team site with the title 'Marketing' and the alias 'Marketing'.",
+    "hints": [
+      "Use New-PnPSite to create sites.",
+      "The -Type parameter should be TeamSite.",
+      "Team sites use -Alias instead of -Url."
+    ],
+    "validation": [
+      { "rule": "contains", "value": "New-PnPSite", "hintOnFail": "Use the New-PnPSite cmdlet." },
+      { "rule": "regex", "pattern": "-Type\\s+TeamSite", "hintOnFail": "Specify -Type TeamSite to create a team site." },
+      { "rule": "regex", "pattern": "-Title\\s+[\"']?Marketing[\"']?", "hintOnFail": "Set the -Title to 'Marketing'." },
+      { "rule": "regex", "pattern": "-Alias\\s+[\"']?Marketing[\"']?", "hintOnFail": "Set the -Alias to 'Marketing'." }
+    ],
+    "solution": "New-PnPSite -Type TeamSite -Title \"Marketing\" -Alias \"Marketing\"",
+    "explanation": "New-PnPSite -Type TeamSite creates a team site backed by a Microsoft 365 Group. The -Alias sets the group email prefix and site URL path."
+  },
+  {
+    "id": "m3-l2-ex3",
+    "type": "syntax-check",
+    "prompt": "Write the command to create a new SharePoint list called 'Tasks' using the GenericList template.",
+    "hints": [
+      "Use New-PnPList to create lists.",
+      "The -Title parameter sets the list name.",
+      "The -Template parameter specifies the list type."
+    ],
+    "validation": [
+      { "rule": "contains", "value": "New-PnPList", "hintOnFail": "Use the New-PnPList cmdlet." },
+      { "rule": "regex", "pattern": "-Title\\s+[\"']?Tasks[\"']?", "hintOnFail": "Set the -Title to 'Tasks'." },
+      { "rule": "regex", "pattern": "-Template\\s+GenericList", "hintOnFail": "Specify -Template GenericList." }
+    ],
+    "solution": "New-PnPList -Title \"Tasks\" -Template GenericList",
+    "explanation": "New-PnPList creates a new list on the connected SharePoint site. GenericList creates a standard custom list with a Title column."
+  },
+  {
+    "id": "m3-l2-ex4",
+    "type": "syntax-check",
+    "prompt": "Write the command to add a text column called 'Department' (internal name 'Department') to the 'Tasks' list.",
+    "hints": [
+      "Use Add-PnPField to add columns.",
+      "Specify the list with -List.",
+      "Set -DisplayName, -InternalName, and -Type."
+    ],
+    "validation": [
+      { "rule": "contains", "value": "Add-PnPField", "hintOnFail": "Use the Add-PnPField cmdlet." },
+      { "rule": "regex", "pattern": "-List\\s+[\"']?Tasks[\"']?", "hintOnFail": "Specify -List \"Tasks\" to target the Tasks list." },
+      { "rule": "regex", "pattern": "-DisplayName\\s+[\"']?Department[\"']?", "hintOnFail": "Set -DisplayName to 'Department'." },
+      { "rule": "regex", "pattern": "-InternalName\\s+[\"']?Department[\"']?", "hintOnFail": "Set -InternalName to 'Department'." },
+      { "rule": "regex", "pattern": "-Type\\s+Text", "hintOnFail": "Set -Type to Text for a text column." }
+    ],
+    "solution": "Add-PnPField -List \"Tasks\" -DisplayName \"Department\" -InternalName \"Department\" -Type Text",
+    "explanation": "Add-PnPField adds a new column to an existing list. The -InternalName is used in code and CAML queries, while -DisplayName is what users see in the browser."
+  }
+]

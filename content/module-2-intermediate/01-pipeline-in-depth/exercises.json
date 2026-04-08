@@ -1,1 +1,95 @@
-[]
+[
+  {
+    "id": "m2-l1-ex1",
+    "type": "syntax-check",
+    "prompt": "Write a pipeline that gets all services and filters to only those with a Status of 'Stopped'.",
+    "hints": [
+      "Start with Get-Service, then pipe to Where-Object.",
+      "Use $_.Status inside the Where-Object script block.",
+      "Try: Get-Service | Where-Object { $_.Status -eq 'Stopped' }"
+    ],
+    "validation": [
+      { "rule": "contains", "value": "Get-Service", "hintOnFail": "Start with the Get-Service cmdlet." },
+      { "rule": "contains", "value": "|", "hintOnFail": "Use the pipe operator | to pass objects to the next cmdlet." },
+      { "rule": "contains", "value": "Where-Object", "hintOnFail": "Use Where-Object to filter the services." },
+      { "rule": "regex", "pattern": "\\$_\\.Status\\s+-eq\\s+['\"]Stopped['\"]", "hintOnFail": "Filter where $_.Status -eq 'Stopped'." }
+    ],
+    "solution": "Get-Service | Where-Object { $_.Status -eq 'Stopped' }",
+    "explanation": "Get-Service retrieves all services. Where-Object filters the pipeline to only those objects where the Status property equals 'Stopped'."
+  },
+  {
+    "id": "m2-l1-ex2",
+    "type": "syntax-check",
+    "prompt": "Write a pipeline that gets all processes, sorts them by WorkingSet64 in descending order, and selects only the Name and WorkingSet64 properties of the first 3.",
+    "hints": [
+      "Chain three cmdlets: Get-Process, Sort-Object, and Select-Object.",
+      "Sort-Object uses -Descending to reverse the order.",
+      "Select-Object uses -First to limit the number of results."
+    ],
+    "validation": [
+      { "rule": "contains", "value": "Get-Process", "hintOnFail": "Start with Get-Process." },
+      { "rule": "contains", "value": "Sort-Object", "hintOnFail": "Pipe to Sort-Object to sort the results." },
+      { "rule": "regex", "pattern": "WorkingSet64", "hintOnFail": "Sort by and select the WorkingSet64 property." },
+      { "rule": "contains", "value": "-Descending", "hintOnFail": "Use -Descending to sort from highest to lowest." },
+      { "rule": "contains", "value": "Select-Object", "hintOnFail": "Pipe to Select-Object to pick properties." },
+      { "rule": "regex", "pattern": "-First\\s+3", "hintOnFail": "Use -First 3 to return only the top 3 results." }
+    ],
+    "solution": "Get-Process | Sort-Object WorkingSet64 -Descending | Select-Object Name, WorkingSet64 -First 3",
+    "explanation": "This pipeline sorts processes by memory usage (WorkingSet64) in descending order, then selects only the Name and WorkingSet64 properties of the top 3."
+  },
+  {
+    "id": "m2-l1-ex3",
+    "type": "syntax-check",
+    "prompt": "Write a pipeline that groups all services by their Status property using Group-Object.",
+    "hints": [
+      "Start with Get-Service and pipe to Group-Object.",
+      "Group-Object takes a property name as its argument.",
+      "Try: Get-Service | Group-Object Status"
+    ],
+    "validation": [
+      { "rule": "contains", "value": "Get-Service", "hintOnFail": "Start with Get-Service." },
+      { "rule": "contains", "value": "|", "hintOnFail": "Use the pipe operator |." },
+      { "rule": "contains", "value": "Group-Object", "hintOnFail": "Use Group-Object to group items." },
+      { "rule": "contains", "value": "Status", "hintOnFail": "Group by the Status property." }
+    ],
+    "solution": "Get-Service | Group-Object Status",
+    "explanation": "Group-Object clusters the service objects by their Status property, showing you a count of how many services are Running, Stopped, etc."
+  },
+  {
+    "id": "m2-l1-ex4",
+    "type": "syntax-check",
+    "prompt": "Write a pipeline that uses Measure-Object to calculate the sum of the Length property for all files in the current directory (use Get-ChildItem).",
+    "hints": [
+      "Get-ChildItem lists items in the current directory.",
+      "Pipe to Measure-Object with -Property Length and -Sum.",
+      "Try: Get-ChildItem | Measure-Object -Property Length -Sum"
+    ],
+    "validation": [
+      { "rule": "contains", "value": "Get-ChildItem", "hintOnFail": "Use Get-ChildItem to list files." },
+      { "rule": "contains", "value": "Measure-Object", "hintOnFail": "Pipe to Measure-Object to perform calculations." },
+      { "rule": "contains", "value": "-Property", "hintOnFail": "Use -Property to specify which property to measure." },
+      { "rule": "contains", "value": "Length", "hintOnFail": "Measure the Length property for file sizes." },
+      { "rule": "contains", "value": "-Sum", "hintOnFail": "Use -Sum to calculate the total." }
+    ],
+    "solution": "Get-ChildItem | Measure-Object -Property Length -Sum",
+    "explanation": "This pipeline gets all items in the current directory and calculates the sum of their Length (file size) property using Measure-Object."
+  },
+  {
+    "id": "m2-l1-ex5",
+    "type": "syntax-check",
+    "prompt": "Write a pipeline that uses ForEach-Object to output the DisplayName of each service in uppercase.",
+    "hints": [
+      "Start with Get-Service and pipe to ForEach-Object.",
+      "Access the DisplayName property with $_.DisplayName.",
+      "Use the .ToUpper() method to convert to uppercase."
+    ],
+    "validation": [
+      { "rule": "contains", "value": "Get-Service", "hintOnFail": "Start with Get-Service." },
+      { "rule": "contains", "value": "ForEach-Object", "hintOnFail": "Pipe to ForEach-Object to process each item." },
+      { "rule": "regex", "pattern": "\\$_\\.DisplayName", "hintOnFail": "Access the DisplayName property with $_.DisplayName." },
+      { "rule": "regex", "pattern": "\\.ToUpper\\(\\)", "hintOnFail": "Call .ToUpper() to convert the string to uppercase." }
+    ],
+    "solution": "Get-Service | ForEach-Object { $_.DisplayName.ToUpper() }",
+    "explanation": "ForEach-Object processes each service object in the pipeline. $_.DisplayName accesses the display name, and .ToUpper() converts it to uppercase."
+  }
+]

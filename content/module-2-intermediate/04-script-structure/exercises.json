@@ -1,1 +1,76 @@
-[]
+[
+  {
+    "id": "m2-l4-ex1",
+    "type": "syntax-check",
+    "prompt": "Write a #Requires statement that enforces PowerShell version 7.0 and requires the script to be run as administrator.",
+    "hints": [
+      "#Requires uses -Version to specify the minimum version.",
+      "Use -RunAsAdministrator to require elevation.",
+      "Each requirement can be on its own #Requires line."
+    ],
+    "validation": [
+      { "rule": "contains", "value": "#Requires", "hintOnFail": "Use the #Requires statement." },
+      { "rule": "regex", "pattern": "-Version\\s+7\\.0", "hintOnFail": "Specify -Version 7.0." },
+      { "rule": "contains", "value": "-RunAsAdministrator", "hintOnFail": "Add -RunAsAdministrator to require elevation." }
+    ],
+    "solution": "#Requires -Version 7.0\n#Requires -RunAsAdministrator",
+    "explanation": "The #Requires statement prevents the script from running unless the conditions are met. -Version 7.0 ensures PowerShell 7+ and -RunAsAdministrator requires an elevated session."
+  },
+  {
+    "id": "m2-l4-ex2",
+    "type": "syntax-check",
+    "prompt": "Write a comment-based help block with a .SYNOPSIS of 'Gets disk space report.' and a .PARAMETER section for a parameter called ComputerName described as 'The target computer.'",
+    "hints": [
+      "Comment-based help goes inside <# ... #> delimiters.",
+      "Each keyword starts with a dot: .SYNOPSIS, .PARAMETER",
+      "The parameter name goes on the same line as .PARAMETER."
+    ],
+    "validation": [
+      { "rule": "contains", "value": "<#", "hintOnFail": "Start the help block with <#." },
+      { "rule": "contains", "value": ".SYNOPSIS", "hintOnFail": "Include the .SYNOPSIS keyword." },
+      { "rule": "regex", "pattern": "Gets disk space report", "hintOnFail": "Set the synopsis to 'Gets disk space report.'" },
+      { "rule": "regex", "pattern": "\\.PARAMETER\\s+ComputerName", "hintOnFail": "Add .PARAMETER ComputerName on the same line." },
+      { "rule": "regex", "pattern": "The target computer", "hintOnFail": "Describe the parameter as 'The target computer.'" },
+      { "rule": "contains", "value": "#>", "hintOnFail": "Close the help block with #>." }
+    ],
+    "solution": "<#\n.SYNOPSIS\n    Gets disk space report.\n\n.PARAMETER ComputerName\n    The target computer.\n#>",
+    "explanation": "Comment-based help uses special keywords preceded by a dot. Get-Help reads these blocks and displays them in the standard help format. The .PARAMETER keyword name must match an actual parameter."
+  },
+  {
+    "id": "m2-l4-ex3",
+    "type": "syntax-check",
+    "prompt": "Write a param() block with a mandatory string parameter called OutputPath and an optional integer parameter called MaxResults with a default value of 50.",
+    "hints": [
+      "Use [Parameter(Mandatory)] to make a parameter required.",
+      "Type constraints go in square brackets: [string], [int].",
+      "Default values are assigned with = after the parameter name."
+    ],
+    "validation": [
+      { "rule": "contains", "value": "param(", "hintOnFail": "Start with the param() keyword." },
+      { "rule": "contains", "value": "[Parameter(Mandatory)]", "hintOnFail": "Use [Parameter(Mandatory)] to make the parameter required." },
+      { "rule": "contains", "value": "[string]", "hintOnFail": "Declare OutputPath as [string] type." },
+      { "rule": "contains", "value": "$OutputPath", "hintOnFail": "Name the parameter $OutputPath." },
+      { "rule": "contains", "value": "[int]", "hintOnFail": "Declare MaxResults as [int] type." },
+      { "rule": "regex", "pattern": "\\$MaxResults\\s*=\\s*50", "hintOnFail": "Set the default value of $MaxResults to 50." }
+    ],
+    "solution": "param(\n    [Parameter(Mandatory)]\n    [string]$OutputPath,\n\n    [int]$MaxResults = 50\n)",
+    "explanation": "The param() block defines script or function parameters. [Parameter(Mandatory)] makes OutputPath required. $MaxResults defaults to 50 if not provided by the caller."
+  },
+  {
+    "id": "m2-l4-ex4",
+    "type": "syntax-check",
+    "prompt": "Write the command to set the execution policy to RemoteSigned for the current user.",
+    "hints": [
+      "Use Set-ExecutionPolicy with -ExecutionPolicy.",
+      "The scope should be CurrentUser.",
+      "RemoteSigned allows local scripts but requires downloaded scripts to be signed."
+    ],
+    "validation": [
+      { "rule": "contains", "value": "Set-ExecutionPolicy", "hintOnFail": "Use the Set-ExecutionPolicy cmdlet." },
+      { "rule": "contains", "value": "RemoteSigned", "hintOnFail": "Set the policy to RemoteSigned." },
+      { "rule": "regex", "pattern": "-Scope\\s+CurrentUser", "hintOnFail": "Use -Scope CurrentUser to apply it only to your user account." }
+    ],
+    "solution": "Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser",
+    "explanation": "Set-ExecutionPolicy controls which scripts are allowed to run. RemoteSigned is the recommended policy for most users. -Scope CurrentUser avoids needing administrator privileges."
+  }
+]

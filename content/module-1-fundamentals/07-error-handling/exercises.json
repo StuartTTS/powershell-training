@@ -1,1 +1,91 @@
-[]
+[
+  {
+    "id": "m1-l7-ex1",
+    "type": "syntax-check",
+    "prompt": "Write a try/catch block that attempts to run Get-Content on a file path stored in $filePath (with -ErrorAction Stop), and in the catch block outputs the error using $_.",
+    "hints": [
+      "Start with the try keyword followed by a { } block.",
+      "Inside try, call Get-Content $filePath -ErrorAction Stop.",
+      "Follow with a catch { } block that outputs $_ or uses Write-Output."
+    ],
+    "validation": [
+      { "rule": "structure", "check": "has-try-catch", "hintOnFail": "Your answer needs both a try { } and a catch { } block." },
+      { "rule": "contains", "value": "Get-Content", "hintOnFail": "Use Get-Content to read the file." },
+      { "rule": "regex", "pattern": "-ErrorAction\\s+Stop", "hintOnFail": "Add -ErrorAction Stop so the error becomes terminating." },
+      { "rule": "regex", "pattern": "\\$_", "hintOnFail": "Use $_ in the catch block to access the error object." }
+    ],
+    "solution": "try {\n    Get-Content $filePath -ErrorAction Stop\n} catch {\n    Write-Output $_\n}",
+    "explanation": "-ErrorAction Stop converts Get-Content's non-terminating error into a terminating error, allowing the catch block to intercept it. $_ holds the ErrorRecord."
+  },
+  {
+    "id": "m1-l7-ex2",
+    "type": "syntax-check",
+    "prompt": "Write a try/catch/finally block. In the try block, run the command 'Get-Item $path -ErrorAction Stop'. In catch, write 'Error occurred'. In finally, write 'Done'.",
+    "hints": [
+      "The finally block comes after catch and always runs.",
+      "Use Write-Output for each message.",
+      "The structure is: try { ... } catch { ... } finally { ... }"
+    ],
+    "validation": [
+      { "rule": "structure", "check": "has-try-catch", "hintOnFail": "Include both try and catch blocks." },
+      { "rule": "contains", "value": "finally", "hintOnFail": "Add a finally block after catch." },
+      { "rule": "contains", "value": "Get-Item", "hintOnFail": "Use Get-Item in the try block." },
+      { "rule": "regex", "pattern": "-ErrorAction\\s+Stop", "hintOnFail": "Add -ErrorAction Stop to make the error terminating." },
+      { "rule": "regex", "pattern": "Error occurred", "hintOnFail": "Output 'Error occurred' in the catch block." },
+      { "rule": "regex", "pattern": "Done", "hintOnFail": "Output 'Done' in the finally block." }
+    ],
+    "solution": "try {\n    Get-Item $path -ErrorAction Stop\n} catch {\n    Write-Output 'Error occurred'\n} finally {\n    Write-Output 'Done'\n}",
+    "explanation": "The finally block runs regardless of whether an error occurs, making it ideal for cleanup tasks. The -ErrorAction Stop ensures the error is terminating."
+  },
+  {
+    "id": "m1-l7-ex3",
+    "type": "syntax-check",
+    "prompt": "Set the $ErrorActionPreference variable to 'Stop' so that all errors in the script become terminating.",
+    "hints": [
+      "$ErrorActionPreference is a preference variable, not a cmdlet.",
+      "Assign it a string value.",
+      "The value should be 'Stop'."
+    ],
+    "validation": [
+      { "rule": "contains", "value": "$ErrorActionPreference", "hintOnFail": "Use the $ErrorActionPreference variable." },
+      { "rule": "regex", "pattern": "=\\s*['\"]Stop['\"]", "hintOnFail": "Set the value to 'Stop'." }
+    ],
+    "solution": "$ErrorActionPreference = 'Stop'",
+    "explanation": "Setting $ErrorActionPreference to 'Stop' converts all non-terminating errors in the current scope into terminating errors, so they can be caught with try/catch."
+  },
+  {
+    "id": "m1-l7-ex4",
+    "type": "syntax-check",
+    "prompt": "Write a try/catch block that catches only [System.IO.FileNotFoundException]. In the try block, use Get-Content 'missing.txt' -ErrorAction Stop. In catch, output 'File not found'.",
+    "hints": [
+      "Specify the exception type after the catch keyword in brackets: catch [System.IO.FileNotFoundException].",
+      "The exception type goes in square brackets between catch and the opening brace.",
+      "Use -ErrorAction Stop on Get-Content to make the error catchable."
+    ],
+    "validation": [
+      { "rule": "structure", "check": "has-try-catch", "hintOnFail": "Use a try/catch block." },
+      { "rule": "regex", "pattern": "catch\\s*\\[System\\.IO\\.FileNotFoundException\\]", "hintOnFail": "Catch the specific [System.IO.FileNotFoundException] type." },
+      { "rule": "contains", "value": "Get-Content", "hintOnFail": "Use Get-Content in the try block." },
+      { "rule": "regex", "pattern": "File not found", "hintOnFail": "Output 'File not found' in the catch block." }
+    ],
+    "solution": "try {\n    Get-Content 'missing.txt' -ErrorAction Stop\n} catch [System.IO.FileNotFoundException] {\n    Write-Output 'File not found'\n}",
+    "explanation": "Specifying an exception type in the catch block filters errors — only FileNotFoundException is caught here. Other errors propagate up the call stack."
+  },
+  {
+    "id": "m1-l7-ex5",
+    "type": "syntax-check",
+    "prompt": "Write a line that uses throw to raise a terminating error with the message 'Configuration file is missing'.",
+    "hints": [
+      "throw is a keyword, not a cmdlet.",
+      "Follow throw with a string message.",
+      "This is a single-line statement."
+    ],
+    "validation": [
+      { "rule": "contains", "value": "throw", "hintOnFail": "Use the throw keyword." },
+      { "rule": "regex", "pattern": "Configuration file is missing", "hintOnFail": "Include the message 'Configuration file is missing'." },
+      { "rule": "forbidden", "value": "Write-Error", "hintOnFail": "Use throw, not Write-Error — throw creates a terminating error." }
+    ],
+    "solution": "throw 'Configuration file is missing'",
+    "explanation": "throw immediately raises a terminating error with the given message. Unlike Write-Error, throw stops execution unless caught by try/catch."
+  }
+]

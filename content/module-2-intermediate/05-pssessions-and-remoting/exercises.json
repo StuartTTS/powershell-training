@@ -1,1 +1,92 @@
-[]
+[
+  {
+    "id": "m2-l5-ex1",
+    "type": "syntax-check",
+    "prompt": "Write the command to start an interactive remoting session on a computer named 'FileServer01'.",
+    "hints": [
+      "Use Enter-PSSession to start an interactive session.",
+      "Specify the target with -ComputerName.",
+      "Try: Enter-PSSession -ComputerName FileServer01"
+    ],
+    "validation": [
+      { "rule": "contains", "value": "Enter-PSSession", "hintOnFail": "Use the Enter-PSSession cmdlet." },
+      { "rule": "regex", "pattern": "-ComputerName\\s+['\"]?FileServer01['\"]?", "hintOnFail": "Specify -ComputerName FileServer01." }
+    ],
+    "solution": "Enter-PSSession -ComputerName FileServer01",
+    "explanation": "Enter-PSSession creates an interactive one-to-one session. Commands you type run on the remote computer until you call Exit-PSSession."
+  },
+  {
+    "id": "m2-l5-ex2",
+    "type": "syntax-check",
+    "prompt": "Write a command that uses Invoke-Command to run 'Get-Service' on two computers named 'Web01' and 'Web02'.",
+    "hints": [
+      "Use Invoke-Command with -ComputerName and -ScriptBlock.",
+      "List multiple computer names separated by commas.",
+      "The script block is enclosed in { }."
+    ],
+    "validation": [
+      { "rule": "contains", "value": "Invoke-Command", "hintOnFail": "Use the Invoke-Command cmdlet." },
+      { "rule": "contains", "value": "-ComputerName", "hintOnFail": "Specify target computers with -ComputerName." },
+      { "rule": "contains", "value": "Web01", "hintOnFail": "Include Web01 in the computer names." },
+      { "rule": "contains", "value": "Web02", "hintOnFail": "Include Web02 in the computer names." },
+      { "rule": "contains", "value": "-ScriptBlock", "hintOnFail": "Use -ScriptBlock to specify the command to run." },
+      { "rule": "contains", "value": "Get-Service", "hintOnFail": "Run Get-Service in the script block." }
+    ],
+    "solution": "Invoke-Command -ComputerName Web01, Web02 -ScriptBlock { Get-Service }",
+    "explanation": "Invoke-Command sends the script block to both computers and runs it in parallel. Each result includes a PSComputerName property identifying its source."
+  },
+  {
+    "id": "m2-l5-ex3",
+    "type": "syntax-check",
+    "prompt": "Write a command that creates a new persistent PSSession to 'DBServer01' and stores it in a variable called $session.",
+    "hints": [
+      "Use New-PSSession to create a persistent session.",
+      "Assign the result to $session.",
+      "Specify the computer with -ComputerName."
+    ],
+    "validation": [
+      { "rule": "contains", "value": "$session", "hintOnFail": "Store the session in a variable called $session." },
+      { "rule": "contains", "value": "New-PSSession", "hintOnFail": "Use New-PSSession to create the persistent session." },
+      { "rule": "regex", "pattern": "-ComputerName\\s+['\"]?DBServer01['\"]?", "hintOnFail": "Specify -ComputerName DBServer01." }
+    ],
+    "solution": "$session = New-PSSession -ComputerName DBServer01",
+    "explanation": "New-PSSession creates a persistent connection. You can reuse $session with Invoke-Command -Session $session for multiple commands that share state."
+  },
+  {
+    "id": "m2-l5-ex4",
+    "type": "syntax-check",
+    "prompt": "Write a command that uses Invoke-Command with the -Credential parameter. First store credentials in $cred using Get-Credential, then run 'hostname' on 'Server01'.",
+    "hints": [
+      "First line: $cred = Get-Credential",
+      "Second line: Invoke-Command with -ComputerName, -Credential, and -ScriptBlock.",
+      "Pass $cred to the -Credential parameter."
+    ],
+    "validation": [
+      { "rule": "contains", "value": "Get-Credential", "hintOnFail": "Use Get-Credential to prompt for credentials." },
+      { "rule": "contains", "value": "$cred", "hintOnFail": "Store the credential in $cred." },
+      { "rule": "contains", "value": "Invoke-Command", "hintOnFail": "Use Invoke-Command to run the remote command." },
+      { "rule": "contains", "value": "-Credential", "hintOnFail": "Pass credentials with -Credential $cred." },
+      { "rule": "contains", "value": "hostname", "hintOnFail": "Run hostname in the script block." }
+    ],
+    "solution": "$cred = Get-Credential\nInvoke-Command -ComputerName Server01 -Credential $cred -ScriptBlock { hostname }",
+    "explanation": "Get-Credential prompts for a username and password, returning a PSCredential object. The -Credential parameter passes these credentials to authenticate on the remote machine."
+  },
+  {
+    "id": "m2-l5-ex5",
+    "type": "syntax-check",
+    "prompt": "Write the command to run a local script file 'C:\\Scripts\\HealthCheck.ps1' on a remote computer named 'ProdServer01' using Invoke-Command.",
+    "hints": [
+      "Use Invoke-Command with -FilePath instead of -ScriptBlock.",
+      "-FilePath specifies a local script to run remotely.",
+      "You don't need to copy the file to the remote machine."
+    ],
+    "validation": [
+      { "rule": "contains", "value": "Invoke-Command", "hintOnFail": "Use Invoke-Command." },
+      { "rule": "regex", "pattern": "-ComputerName\\s+['\"]?ProdServer01['\"]?", "hintOnFail": "Specify -ComputerName ProdServer01." },
+      { "rule": "contains", "value": "-FilePath", "hintOnFail": "Use -FilePath to specify the local script." },
+      { "rule": "regex", "pattern": "C:\\\\Scripts\\\\HealthCheck\\.ps1", "hintOnFail": "Set the file path to C:\\Scripts\\HealthCheck.ps1." }
+    ],
+    "solution": "Invoke-Command -ComputerName ProdServer01 -FilePath C:\\Scripts\\HealthCheck.ps1",
+    "explanation": "The -FilePath parameter reads a local .ps1 file and sends its contents to the remote computer for execution. This avoids needing to copy scripts to remote machines."
+  }
+]

@@ -1,1 +1,76 @@
-[]
+[
+  {
+    "id": "m3-l4-ex1",
+    "type": "syntax-check",
+    "prompt": "Write a CAML query command to get items from the 'Tickets' list where the Priority field equals 'High'. Store the CAML XML in a $query variable, then pass it to Get-PnPListItem.",
+    "hints": [
+      "Define $query with a CAML <View> containing a <Where> clause.",
+      "Use <Eq> with <FieldRef Name='Priority'/> and <Value Type='Text'>High</Value>.",
+      "Pass the query variable with Get-PnPListItem -List \"Tickets\" -Query $query."
+    ],
+    "validation": [
+      { "rule": "contains", "value": "Get-PnPListItem", "hintOnFail": "Use Get-PnPListItem to retrieve list items." },
+      { "rule": "regex", "pattern": "-List\\s+[\"']?Tickets[\"']?", "hintOnFail": "Specify -List \"Tickets\"." },
+      { "rule": "contains", "value": "-Query", "hintOnFail": "Use the -Query parameter to pass your CAML query." },
+      { "rule": "contains", "value": "FieldRef", "hintOnFail": "Your CAML query needs a <FieldRef> element to reference the Priority field." },
+      { "rule": "contains", "value": "High", "hintOnFail": "Filter for the value 'High'." }
+    ],
+    "solution": "$query = \"<View><Query><Where><Eq><FieldRef Name='Priority'/><Value Type='Text'>High</Value></Eq></Where></Query></View>\"\nGet-PnPListItem -List \"Tickets\" -Query $query",
+    "explanation": "CAML queries filter data on the server side, which is more efficient than downloading all items and filtering locally. The <Eq> operator checks for exact matches."
+  },
+  {
+    "id": "m3-l4-ex2",
+    "type": "syntax-check",
+    "prompt": "Write the command to add a new item to the 'Contacts' list with Title set to 'John Smith' and Email set to 'john@example.com'.",
+    "hints": [
+      "Use Add-PnPListItem with the -List and -Values parameters.",
+      "The -Values parameter takes a hashtable: @{ Key = \"Value\" }.",
+      "Include both Title and Email in the hashtable."
+    ],
+    "validation": [
+      { "rule": "contains", "value": "Add-PnPListItem", "hintOnFail": "Use the Add-PnPListItem cmdlet." },
+      { "rule": "regex", "pattern": "-List\\s+[\"']?Contacts[\"']?", "hintOnFail": "Specify -List \"Contacts\"." },
+      { "rule": "contains", "value": "-Values", "hintOnFail": "Use -Values to provide field values as a hashtable." },
+      { "rule": "contains", "value": "John Smith", "hintOnFail": "Set the Title to 'John Smith'." },
+      { "rule": "contains", "value": "john@example.com", "hintOnFail": "Set the Email to 'john@example.com'." }
+    ],
+    "solution": "Add-PnPListItem -List \"Contacts\" -Values @{ Title = \"John Smith\"; Email = \"john@example.com\" }",
+    "explanation": "Add-PnPListItem creates a new list item. The -Values hashtable maps field internal names to values. Use semicolons to separate entries on one line."
+  },
+  {
+    "id": "m3-l4-ex3",
+    "type": "syntax-check",
+    "prompt": "Write the command to update list item with ID 12 in the 'Contacts' list, changing the Email field to 'updated@example.com'.",
+    "hints": [
+      "Use Set-PnPListItem to update existing items.",
+      "The -Identity parameter takes the item ID.",
+      "Pass the new values with -Values as a hashtable."
+    ],
+    "validation": [
+      { "rule": "contains", "value": "Set-PnPListItem", "hintOnFail": "Use the Set-PnPListItem cmdlet." },
+      { "rule": "regex", "pattern": "-List\\s+[\"']?Contacts[\"']?", "hintOnFail": "Specify -List \"Contacts\"." },
+      { "rule": "regex", "pattern": "-Identity\\s+12", "hintOnFail": "Use -Identity 12 to target item 12." },
+      { "rule": "contains", "value": "updated@example.com", "hintOnFail": "Set the Email field to 'updated@example.com'." }
+    ],
+    "solution": "Set-PnPListItem -List \"Contacts\" -Identity 12 -Values @{ Email = \"updated@example.com\" }",
+    "explanation": "Set-PnPListItem modifies an existing item. Only the fields you include in -Values are updated; other fields remain unchanged."
+  },
+  {
+    "id": "m3-l4-ex4",
+    "type": "syntax-check",
+    "prompt": "Write the command to add the 'Task' content type to the 'Projects' list and make it the default content type.",
+    "hints": [
+      "Use Add-PnPContentTypeToList.",
+      "Specify the list with -List and the content type with -ContentType.",
+      "Use the -DefaultContentType switch to make it the default."
+    ],
+    "validation": [
+      { "rule": "contains", "value": "Add-PnPContentTypeToList", "hintOnFail": "Use the Add-PnPContentTypeToList cmdlet." },
+      { "rule": "regex", "pattern": "-List\\s+[\"']?Projects[\"']?", "hintOnFail": "Specify -List \"Projects\"." },
+      { "rule": "regex", "pattern": "-ContentType\\s+[\"']?Task[\"']?", "hintOnFail": "Specify -ContentType \"Task\"." },
+      { "rule": "contains", "value": "-DefaultContentType", "hintOnFail": "Add the -DefaultContentType switch to set it as the default." }
+    ],
+    "solution": "Add-PnPContentTypeToList -List \"Projects\" -ContentType \"Task\" -DefaultContentType",
+    "explanation": "Add-PnPContentTypeToList associates a site content type with a list. The -DefaultContentType switch ensures new items use this content type by default."
+  }
+]

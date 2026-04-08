@@ -1,1 +1,76 @@
-[]
+[
+  {
+    "id": "m2-l3-ex1",
+    "type": "syntax-check",
+    "prompt": "Write a command that uses Invoke-RestMethod to make a GET request to 'https://jsonplaceholder.typicode.com/posts/1'.",
+    "hints": [
+      "Use Invoke-RestMethod with the -Uri parameter.",
+      "GET is the default method, so you don't need -Method.",
+      "Try: Invoke-RestMethod -Uri 'https://jsonplaceholder.typicode.com/posts/1'"
+    ],
+    "validation": [
+      { "rule": "contains", "value": "Invoke-RestMethod", "hintOnFail": "Use the Invoke-RestMethod cmdlet." },
+      { "rule": "contains", "value": "-Uri", "hintOnFail": "Specify the URL with the -Uri parameter." },
+      { "rule": "contains", "value": "jsonplaceholder.typicode.com/posts/1", "hintOnFail": "Use the URL 'https://jsonplaceholder.typicode.com/posts/1'." }
+    ],
+    "solution": "Invoke-RestMethod -Uri 'https://jsonplaceholder.typicode.com/posts/1'",
+    "explanation": "Invoke-RestMethod sends a GET request by default. It automatically parses the JSON response into a PowerShell object with properties like title, body, and userId."
+  },
+  {
+    "id": "m2-l3-ex2",
+    "type": "syntax-check",
+    "prompt": "Create a hashtable called $headers with an 'Authorization' key set to 'Bearer abc123', then pass it to Invoke-RestMethod using the -Headers parameter for a GET request to 'https://api.example.com/data'.",
+    "hints": [
+      "Define a hashtable with @{ 'Authorization' = 'Bearer abc123' }.",
+      "Use -Headers $headers to pass the hashtable.",
+      "The complete command has two lines: the hashtable definition and the Invoke-RestMethod call."
+    ],
+    "validation": [
+      { "rule": "contains", "value": "$headers", "hintOnFail": "Store the headers in a variable called $headers." },
+      { "rule": "regex", "pattern": "Authorization.*Bearer abc123", "hintOnFail": "Set the Authorization key to 'Bearer abc123'." },
+      { "rule": "contains", "value": "Invoke-RestMethod", "hintOnFail": "Use Invoke-RestMethod to make the request." },
+      { "rule": "contains", "value": "-Headers", "hintOnFail": "Pass the headers hashtable using -Headers." }
+    ],
+    "solution": "$headers = @{ 'Authorization' = 'Bearer abc123' }\nInvoke-RestMethod -Uri 'https://api.example.com/data' -Headers $headers",
+    "explanation": "The headers hashtable passes HTTP headers to the API. The Authorization header with a Bearer token is the most common way to authenticate with REST APIs."
+  },
+  {
+    "id": "m2-l3-ex3",
+    "type": "syntax-check",
+    "prompt": "Write a command that sends a POST request to 'https://jsonplaceholder.typicode.com/posts' with a JSON body containing a 'title' of 'Test' and a 'body' of 'Content'. Use ConvertTo-Json and set the content type.",
+    "hints": [
+      "Create a hashtable with title and body keys, then pipe it to ConvertTo-Json.",
+      "Use -Method Post and -ContentType 'application/json'.",
+      "Store the JSON in a variable first, then pass it with -Body."
+    ],
+    "validation": [
+      { "rule": "contains", "value": "Invoke-RestMethod", "hintOnFail": "Use Invoke-RestMethod to send the request." },
+      { "rule": "contains", "value": "-Method", "hintOnFail": "Specify the HTTP method with -Method." },
+      { "rule": "regex", "pattern": "Post", "hintOnFail": "Use Post as the HTTP method." },
+      { "rule": "contains", "value": "ConvertTo-Json", "hintOnFail": "Convert the body hashtable to JSON with ConvertTo-Json." },
+      { "rule": "contains", "value": "-ContentType", "hintOnFail": "Set -ContentType to 'application/json'." },
+      { "rule": "contains", "value": "-Body", "hintOnFail": "Pass the JSON string using the -Body parameter." }
+    ],
+    "solution": "$body = @{ title = 'Test'; body = 'Content' } | ConvertTo-Json\nInvoke-RestMethod -Uri 'https://jsonplaceholder.typicode.com/posts' -Method Post -Body $body -ContentType 'application/json'",
+    "explanation": "The hashtable is converted to a JSON string with ConvertTo-Json. Invoke-RestMethod sends it as a POST request. The -ContentType header tells the API the body is JSON."
+  },
+  {
+    "id": "m2-l3-ex4",
+    "type": "syntax-check",
+    "prompt": "Write a command that calls Invoke-RestMethod inside a try/catch block, using -ErrorAction Stop so exceptions are caught. In the catch block, write the error message using Write-Warning.",
+    "hints": [
+      "Wrap the Invoke-RestMethod call in try { ... }.",
+      "Add -ErrorAction Stop so non-terminating errors become catchable.",
+      "Use $_.Exception.Message in the catch block."
+    ],
+    "validation": [
+      { "rule": "contains", "value": "try", "hintOnFail": "Start with a try block." },
+      { "rule": "contains", "value": "catch", "hintOnFail": "Add a catch block to handle errors." },
+      { "rule": "contains", "value": "Invoke-RestMethod", "hintOnFail": "Call Invoke-RestMethod inside the try block." },
+      { "rule": "contains", "value": "-ErrorAction Stop", "hintOnFail": "Use -ErrorAction Stop to make errors catchable." },
+      { "rule": "contains", "value": "Write-Warning", "hintOnFail": "Use Write-Warning in the catch block to display the error." }
+    ],
+    "solution": "try {\n    Invoke-RestMethod -Uri 'https://api.example.com/data' -ErrorAction Stop\n} catch {\n    Write-Warning \"API call failed: $($_.Exception.Message)\"\n}",
+    "explanation": "The -ErrorAction Stop parameter converts non-terminating errors into terminating exceptions that the catch block can handle. Write-Warning outputs the error message as a warning."
+  }
+]

@@ -1,1 +1,95 @@
-[]
+[
+  {
+    "id": "m3-l6-ex1",
+    "type": "syntax-check",
+    "prompt": "Write the command to get all users and display only their DisplayName and UserPrincipalName. Use the -Property parameter and pipe to Select-Object.",
+    "hints": [
+      "Start with Get-MgUser -All to get all users.",
+      "Use -Property to request specific fields from the API.",
+      "Pipe to Select-Object to shape the output."
+    ],
+    "validation": [
+      { "rule": "contains", "value": "Get-MgUser", "hintOnFail": "Use the Get-MgUser cmdlet." },
+      { "rule": "contains", "value": "-All", "hintOnFail": "Add -All to return all users." },
+      { "rule": "contains", "value": "-Property", "hintOnFail": "Use -Property to request specific fields." },
+      { "rule": "contains", "value": "DisplayName", "hintOnFail": "Include DisplayName in your property list." },
+      { "rule": "contains", "value": "UserPrincipalName", "hintOnFail": "Include UserPrincipalName in your property list." },
+      { "rule": "contains", "value": "Select-Object", "hintOnFail": "Pipe to Select-Object to display only the requested properties." }
+    ],
+    "solution": "Get-MgUser -All -Property DisplayName, UserPrincipalName | Select-Object DisplayName, UserPrincipalName",
+    "explanation": "The -Property parameter tells the Graph API which fields to return, while Select-Object shapes the PowerShell output. Both are needed for clean, efficient results."
+  },
+  {
+    "id": "m3-l6-ex2",
+    "type": "syntax-check",
+    "prompt": "Write the command to find all users in the 'Sales' department using the -Filter parameter.",
+    "hints": [
+      "Use Get-MgUser with -Filter for server-side filtering.",
+      "OData filter syntax: \"department eq 'Sales'\".",
+      "Add -All to ensure all matching results are returned."
+    ],
+    "validation": [
+      { "rule": "contains", "value": "Get-MgUser", "hintOnFail": "Use the Get-MgUser cmdlet." },
+      { "rule": "contains", "value": "-Filter", "hintOnFail": "Use the -Filter parameter for server-side filtering." },
+      { "rule": "contains", "value": "department", "hintOnFail": "Filter on the department property." },
+      { "rule": "contains", "value": "Sales", "hintOnFail": "Filter for the value 'Sales'." }
+    ],
+    "solution": "Get-MgUser -Filter \"department eq 'Sales'\" -All",
+    "explanation": "The -Filter parameter sends an OData query to the Graph API, which filters results on the server. This is much faster than retrieving all users and filtering locally."
+  },
+  {
+    "id": "m3-l6-ex3",
+    "type": "syntax-check",
+    "prompt": "Write the command to update the user 'bob@contoso.com', setting their Department to 'Finance' and JobTitle to 'Analyst'.",
+    "hints": [
+      "Use Update-MgUser to modify user properties.",
+      "The -UserId parameter takes the user's UPN or object ID.",
+      "Use -Department and -JobTitle parameters."
+    ],
+    "validation": [
+      { "rule": "contains", "value": "Update-MgUser", "hintOnFail": "Use the Update-MgUser cmdlet." },
+      { "rule": "regex", "pattern": "-UserId\\s+[\"']?bob@contoso\\.com[\"']?", "hintOnFail": "Specify -UserId \"bob@contoso.com\"." },
+      { "rule": "regex", "pattern": "-Department\\s+[\"']?Finance[\"']?", "hintOnFail": "Set -Department to 'Finance'." },
+      { "rule": "regex", "pattern": "-JobTitle\\s+[\"']?Analyst[\"']?", "hintOnFail": "Set -JobTitle to 'Analyst'." }
+    ],
+    "solution": "Update-MgUser -UserId \"bob@contoso.com\" -Department \"Finance\" -JobTitle \"Analyst\"",
+    "explanation": "Update-MgUser modifies properties of an existing user. You only need to specify the properties you want to change."
+  },
+  {
+    "id": "m3-l6-ex4",
+    "type": "syntax-check",
+    "prompt": "Write the command to view all subscribed SKUs in your tenant, showing the SkuPartNumber and ConsumedUnits.",
+    "hints": [
+      "Use Get-MgSubscribedSku to list available licenses.",
+      "Pipe to Select-Object to pick specific properties.",
+      "The properties are SkuPartNumber and ConsumedUnits."
+    ],
+    "validation": [
+      { "rule": "contains", "value": "Get-MgSubscribedSku", "hintOnFail": "Use the Get-MgSubscribedSku cmdlet." },
+      { "rule": "contains", "value": "Select-Object", "hintOnFail": "Pipe to Select-Object to choose which properties to display." },
+      { "rule": "contains", "value": "SkuPartNumber", "hintOnFail": "Include SkuPartNumber in the output." },
+      { "rule": "contains", "value": "ConsumedUnits", "hintOnFail": "Include ConsumedUnits in the output." }
+    ],
+    "solution": "Get-MgSubscribedSku | Select-Object SkuPartNumber, ConsumedUnits",
+    "explanation": "Get-MgSubscribedSku returns license information for your tenant. SkuPartNumber is the license name (e.g., ENTERPRISEPACK) and ConsumedUnits shows how many are in use."
+  },
+  {
+    "id": "m3-l6-ex5",
+    "type": "syntax-check",
+    "prompt": "Write the command to assign a license to user 'pat@contoso.com'. Use Set-MgUserLicense with -AddLicenses containing a SkuId from $skuId, and an empty -RemoveLicenses array.",
+    "hints": [
+      "Use Set-MgUserLicense to assign licenses.",
+      "-AddLicenses takes an array of hashtables: @(@{SkuId = $skuId}).",
+      "-RemoveLicenses must be provided even if empty: @()."
+    ],
+    "validation": [
+      { "rule": "contains", "value": "Set-MgUserLicense", "hintOnFail": "Use the Set-MgUserLicense cmdlet." },
+      { "rule": "regex", "pattern": "-UserId\\s+[\"']?pat@contoso\\.com[\"']?", "hintOnFail": "Specify -UserId \"pat@contoso.com\"." },
+      { "rule": "contains", "value": "-AddLicenses", "hintOnFail": "Use -AddLicenses to specify licenses to add." },
+      { "rule": "contains", "value": "$skuId", "hintOnFail": "Reference the $skuId variable for the SkuId value." },
+      { "rule": "contains", "value": "-RemoveLicenses", "hintOnFail": "You must include -RemoveLicenses (use @() for an empty array)." }
+    ],
+    "solution": "Set-MgUserLicense -UserId \"pat@contoso.com\" -AddLicenses @(@{SkuId = $skuId}) -RemoveLicenses @()",
+    "explanation": "Set-MgUserLicense requires both -AddLicenses and -RemoveLicenses. Each license in -AddLicenses is a hashtable with a SkuId key. Pass @() when you have nothing to remove."
+  }
+]

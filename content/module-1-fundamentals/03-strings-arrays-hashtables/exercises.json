@@ -1,1 +1,90 @@
-[]
+[
+  {
+    "id": "m1-l3-ex1",
+    "type": "syntax-check",
+    "prompt": "Given $city = \"Seattle\", write a double-quoted string that produces: \"I live in Seattle.\" using variable expansion (not concatenation).",
+    "hints": [
+      "Double quotes allow variable expansion with $variableName.",
+      "Simply place $city inside the double-quoted string.",
+      "Try: \"I live in $city.\""
+    ],
+    "validation": [
+      { "rule": "regex", "pattern": "\".*\\$city.*\"", "hintOnFail": "Use double quotes and include $city inside the string for variable expansion." },
+      { "rule": "forbidden", "value": "+", "hintOnFail": "Use variable expansion inside double quotes, not string concatenation with +." },
+      { "rule": "regex", "pattern": "I live in", "hintOnFail": "The string should read: I live in $city." }
+    ],
+    "solution": "\"I live in $city.\"",
+    "explanation": "Double-quoted strings expand variables automatically. PowerShell replaces $city with its value, producing \"I live in Seattle.\""
+  },
+  {
+    "id": "m1-l3-ex2",
+    "type": "syntax-check",
+    "prompt": "Use the .Replace() string method to replace \"World\" with \"PowerShell\" in the string \"Hello, World!\" and store the result in $msg.",
+    "hints": [
+      "Call .Replace() on the string with two arguments.",
+      "The first argument is the text to find, the second is the replacement.",
+      "Try: $msg = \"Hello, World!\".Replace(\"World\", \"PowerShell\")"
+    ],
+    "validation": [
+      { "rule": "regex", "pattern": "\\$msg\\s*=", "hintOnFail": "Store the result in a variable named $msg." },
+      { "rule": "contains", "value": ".Replace(", "hintOnFail": "Use the .Replace() method on the string." },
+      { "rule": "regex", "pattern": "\\.Replace\\(.*[\"']World[\"'].*,.*[\"']PowerShell[\"'].*\\)", "hintOnFail": "Pass \"World\" as the first argument and \"PowerShell\" as the second." }
+    ],
+    "solution": "$msg = \"Hello, World!\".Replace(\"World\", \"PowerShell\")",
+    "explanation": "The .Replace() method is a .NET string method that returns a new string with all occurrences of the first argument replaced by the second."
+  },
+  {
+    "id": "m1-l3-ex3",
+    "type": "syntax-check",
+    "prompt": "Create an array called $fruits containing \"apple\", \"banana\", and \"cherry\" using the @() syntax.",
+    "hints": [
+      "Use @() with comma-separated values.",
+      "Each value should be a quoted string.",
+      "Try: $fruits = @(\"apple\", \"banana\", \"cherry\")"
+    ],
+    "validation": [
+      { "rule": "regex", "pattern": "\\$fruits\\s*=\\s*@\\(", "hintOnFail": "Use $fruits = @(...) to create the array." },
+      { "rule": "contains", "value": "apple", "hintOnFail": "Include \"apple\" in the array." },
+      { "rule": "contains", "value": "banana", "hintOnFail": "Include \"banana\" in the array." },
+      { "rule": "contains", "value": "cherry", "hintOnFail": "Include \"cherry\" in the array." }
+    ],
+    "solution": "$fruits = @(\"apple\", \"banana\", \"cherry\")",
+    "explanation": "The @() syntax explicitly creates an array. Comma-separated values inside the parentheses become the array elements."
+  },
+  {
+    "id": "m1-l3-ex4",
+    "type": "syntax-check",
+    "prompt": "Create a hashtable called $server with keys: Name set to \"WebSrv01\", Port set to 443, and SSL set to $true.",
+    "hints": [
+      "Use @{} to create a hashtable.",
+      "Separate key-value pairs with semicolons on one line, or use multiple lines.",
+      "Keys use the format: Key = Value"
+    ],
+    "validation": [
+      { "rule": "regex", "pattern": "\\$server\\s*=\\s*@\\{", "hintOnFail": "Use $server = @{...} to create the hashtable." },
+      { "rule": "regex", "pattern": "Name\\s*=\\s*[\"']WebSrv01[\"']", "hintOnFail": "Set the Name key to \"WebSrv01\"." },
+      { "rule": "regex", "pattern": "Port\\s*=\\s*443", "hintOnFail": "Set the Port key to 443." },
+      { "rule": "regex", "pattern": "SSL\\s*=\\s*\\$true", "hintOnFail": "Set the SSL key to $true." }
+    ],
+    "solution": "$server = @{ Name = \"WebSrv01\"; Port = 443; SSL = $true }",
+    "explanation": "Hashtables store key-value pairs using @{} syntax. Keys and values are separated by =, and pairs are separated by semicolons or newlines."
+  },
+  {
+    "id": "m1-l3-ex5",
+    "type": "syntax-check",
+    "prompt": "Create an ordered hashtable called $config with keys Host = \"localhost\" and Port = 8080. Use the [ordered] keyword.",
+    "hints": [
+      "Place [ordered] before @{} to create an ordered hashtable.",
+      "This preserves the order in which you define the keys.",
+      "Try: $config = [ordered]@{ Host = \"localhost\"; Port = 8080 }"
+    ],
+    "validation": [
+      { "rule": "regex", "pattern": "\\$config\\s*=\\s*\\[ordered\\]\\s*@\\{", "hintOnFail": "Use [ordered]@{} to create an ordered hashtable." },
+      { "rule": "regex", "pattern": "Host\\s*=\\s*[\"']localhost[\"']", "hintOnFail": "Set the Host key to \"localhost\"." },
+      { "rule": "regex", "pattern": "Port\\s*=\\s*8080", "hintOnFail": "Set the Port key to 8080." },
+      { "rule": "order", "sequence": ["Host", "Port"], "hintOnFail": "Define Host before Port to maintain the correct order." }
+    ],
+    "solution": "$config = [ordered]@{ Host = \"localhost\"; Port = 8080 }",
+    "explanation": "The [ordered] keyword creates an OrderedDictionary that preserves insertion order, unlike a regular hashtable where key order is not guaranteed."
+  }
+]

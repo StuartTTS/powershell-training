@@ -1,1 +1,73 @@
-[]
+[
+  {
+    "id": "m3-l5-ex1",
+    "type": "syntax-check",
+    "prompt": "Write the command to get all Microsoft 365 groups using the Microsoft Graph module.",
+    "hints": [
+      "Use the Get-MgGroup cmdlet.",
+      "Add the -All parameter to return all groups.",
+      "Try: Get-MgGroup -All"
+    ],
+    "validation": [
+      { "rule": "contains", "value": "Get-MgGroup", "hintOnFail": "Use the Get-MgGroup cmdlet." },
+      { "rule": "contains", "value": "-All", "hintOnFail": "Add -All to retrieve all groups (Graph cmdlets page results by default)." }
+    ],
+    "solution": "Get-MgGroup -All",
+    "explanation": "Get-MgGroup retrieves groups from Microsoft Entra ID via the Graph API. The -All parameter ensures all groups are returned instead of just the first page."
+  },
+  {
+    "id": "m3-l5-ex2",
+    "type": "syntax-check",
+    "prompt": "Write the command to create a new M365 Group (Unified group) with display name 'Sales Team', mail nickname 'salesteam', mail enabled, and security disabled.",
+    "hints": [
+      "Use New-MgGroup to create groups.",
+      "M365 Groups require -GroupTypes \"Unified\".",
+      "Set -MailEnabled:$true and -SecurityEnabled:$false."
+    ],
+    "validation": [
+      { "rule": "contains", "value": "New-MgGroup", "hintOnFail": "Use the New-MgGroup cmdlet." },
+      { "rule": "contains", "value": "Sales Team", "hintOnFail": "Set -DisplayName to 'Sales Team'." },
+      { "rule": "contains", "value": "salesteam", "hintOnFail": "Set -MailNickname to 'salesteam'." },
+      { "rule": "contains", "value": "Unified", "hintOnFail": "M365 Groups need -GroupTypes \"Unified\" to distinguish them from security groups." },
+      { "rule": "regex", "pattern": "-MailEnabled[:\\s]+\\$true", "hintOnFail": "Set -MailEnabled:$true for an M365 Group." }
+    ],
+    "solution": "New-MgGroup -DisplayName \"Sales Team\" -MailEnabled:$true -MailNickname \"salesteam\" -SecurityEnabled:$false -GroupTypes \"Unified\"",
+    "explanation": "New-MgGroup creates a group in Microsoft Entra ID. The -GroupTypes 'Unified' flag makes it an M365 Group with shared mailbox, calendar, and file storage."
+  },
+  {
+    "id": "m3-l5-ex3",
+    "type": "syntax-check",
+    "prompt": "Write the command to create a new Teams channel called 'Announcements' with description 'Company-wide announcements' in a team identified by $teamId.",
+    "hints": [
+      "Use New-MgTeamChannel to create channels.",
+      "The -TeamId parameter takes the team's group ID.",
+      "Use -DisplayName for the channel name and -Description for the description."
+    ],
+    "validation": [
+      { "rule": "contains", "value": "New-MgTeamChannel", "hintOnFail": "Use the New-MgTeamChannel cmdlet." },
+      { "rule": "regex", "pattern": "-TeamId\\s+\\$teamId", "hintOnFail": "Pass the team ID with -TeamId $teamId." },
+      { "rule": "regex", "pattern": "-DisplayName\\s+[\"']?Announcements[\"']?", "hintOnFail": "Set -DisplayName to 'Announcements'." },
+      { "rule": "regex", "pattern": "-Description\\s+[\"']", "hintOnFail": "Add -Description with the channel description." }
+    ],
+    "solution": "New-MgTeamChannel -TeamId $teamId -DisplayName \"Announcements\" -Description \"Company-wide announcements\"",
+    "explanation": "New-MgTeamChannel adds a channel to an existing team. You need the team's group ID (a GUID), which you can get from Get-MgGroup."
+  },
+  {
+    "id": "m3-l5-ex4",
+    "type": "syntax-check",
+    "prompt": "Write the command to filter groups by display name, finding the group named 'Engineering'. Use the -Filter parameter with an OData filter expression.",
+    "hints": [
+      "Use Get-MgGroup with the -Filter parameter.",
+      "OData filter syntax uses: \"displayName eq 'value'\".",
+      "The property name in the filter is displayName (camelCase)."
+    ],
+    "validation": [
+      { "rule": "contains", "value": "Get-MgGroup", "hintOnFail": "Use the Get-MgGroup cmdlet." },
+      { "rule": "contains", "value": "-Filter", "hintOnFail": "Use the -Filter parameter for server-side filtering." },
+      { "rule": "contains", "value": "displayName", "hintOnFail": "Filter on the displayName property (camelCase)." },
+      { "rule": "contains", "value": "Engineering", "hintOnFail": "Filter for the value 'Engineering'." }
+    ],
+    "solution": "Get-MgGroup -Filter \"displayName eq 'Engineering'\"",
+    "explanation": "The -Filter parameter uses OData query syntax to filter results server-side. This is more efficient than retrieving all groups and filtering with Where-Object."
+  }
+]

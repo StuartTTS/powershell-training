@@ -1,1 +1,74 @@
-[]
+[
+  {
+    "id": "m3-l7-ex1",
+    "type": "syntax-check",
+    "prompt": "Write the command to import a CSV file located at 'C:\\Data\\users.csv' and store it in a variable called $users.",
+    "hints": [
+      "Use Import-Csv to read CSV files.",
+      "The -Path parameter specifies the file location.",
+      "Assign the result to $users with the = operator."
+    ],
+    "validation": [
+      { "rule": "contains", "value": "$users", "hintOnFail": "Store the result in a variable called $users." },
+      { "rule": "contains", "value": "Import-Csv", "hintOnFail": "Use the Import-Csv cmdlet." },
+      { "rule": "regex", "pattern": "C:\\\\Data\\\\users\\.csv|C:/Data/users\\.csv", "hintOnFail": "Specify the path 'C:\\Data\\users.csv'." }
+    ],
+    "solution": "$users = Import-Csv -Path \"C:\\Data\\users.csv\"",
+    "explanation": "Import-Csv reads a CSV file and converts each row into a PowerShell object. Column headers become property names you can access with dot notation like $users[0].Name."
+  },
+  {
+    "id": "m3-l7-ex2",
+    "type": "syntax-check",
+    "prompt": "Write a foreach loop that iterates over $items and adds each one to a SharePoint list called 'Products'. Each CSV row has ProductName and Price columns. Map ProductName to Title and Price to Cost in the -Values hashtable.",
+    "hints": [
+      "Use: foreach ($item in $items) { ... }",
+      "Inside the loop, use Add-PnPListItem with -List and -Values.",
+      "Map CSV columns with $item.ProductName and $item.Price."
+    ],
+    "validation": [
+      { "rule": "regex", "pattern": "foreach\\s*\\(\\s*\\$item\\s+in\\s+\\$items\\s*\\)", "hintOnFail": "Use: foreach ($item in $items) to loop through the items." },
+      { "rule": "contains", "value": "Add-PnPListItem", "hintOnFail": "Use Add-PnPListItem inside the loop to add items to the list." },
+      { "rule": "regex", "pattern": "-List\\s+[\"']?Products[\"']?", "hintOnFail": "Specify -List \"Products\"." },
+      { "rule": "contains", "value": "$item.ProductName", "hintOnFail": "Use $item.ProductName to get the product name from the CSV row." },
+      { "rule": "contains", "value": "$item.Price", "hintOnFail": "Use $item.Price to get the price from the CSV row." }
+    ],
+    "solution": "foreach ($item in $items) {\n    Add-PnPListItem -List \"Products\" -Values @{\n        Title = $item.ProductName\n        Cost  = $item.Price\n    }\n}",
+    "explanation": "The foreach loop processes each CSV row. Add-PnPListItem creates a new SharePoint list item for each row, mapping CSV columns to list field names via the -Values hashtable."
+  },
+  {
+    "id": "m3-l7-ex3",
+    "type": "syntax-check",
+    "prompt": "Write a foreach loop over $users that wraps a New-MgUser call in a try/catch block. On success, write 'Created: ' followed by the DisplayName. On failure, use Write-Warning with the error message.",
+    "hints": [
+      "Start with foreach ($user in $users) { try { ... } catch { ... } }.",
+      "Use New-MgUser inside the try block.",
+      "Use Write-Warning \"Failed: $($user.DisplayName) - $_\" in the catch block."
+    ],
+    "validation": [
+      { "rule": "regex", "pattern": "foreach\\s*\\(\\s*\\$user\\s+in\\s+\\$users\\s*\\)", "hintOnFail": "Use: foreach ($user in $users) { ... }" },
+      { "rule": "structure", "check": "has-try-catch", "hintOnFail": "Wrap the operation in a try { } catch { } block." },
+      { "rule": "contains", "value": "New-MgUser", "hintOnFail": "Call New-MgUser inside the try block to create the user." },
+      { "rule": "contains", "value": "Write-Warning", "hintOnFail": "Use Write-Warning in the catch block to log failures." }
+    ],
+    "solution": "foreach ($user in $users) {\n    try {\n        New-MgUser -DisplayName $user.DisplayName -UserPrincipalName $user.UserPrincipalName -AccountEnabled:$true -MailNickname $user.MailNickname -PasswordProfile $passwordProfile\n        Write-Host \"Created: $($user.DisplayName)\"\n    }\n    catch {\n        Write-Warning \"Failed: $($user.DisplayName) - $_\"\n    }\n}",
+    "explanation": "Wrapping each iteration in try/catch ensures one failure does not stop the entire batch. Write-Warning logs errors without terminating the script."
+  },
+  {
+    "id": "m3-l7-ex4",
+    "type": "syntax-check",
+    "prompt": "Write a Write-Progress command with -Activity set to 'Processing items', -Status set to '5 of 20', and -PercentComplete set to 25.",
+    "hints": [
+      "Use Write-Progress with the -Activity parameter.",
+      "The -Status parameter shows detailed text.",
+      "The -PercentComplete parameter takes a number from 0 to 100."
+    ],
+    "validation": [
+      { "rule": "contains", "value": "Write-Progress", "hintOnFail": "Use the Write-Progress cmdlet." },
+      { "rule": "regex", "pattern": "-Activity\\s+[\"']Processing items[\"']", "hintOnFail": "Set -Activity to 'Processing items'." },
+      { "rule": "regex", "pattern": "-Status\\s+[\"']5 of 20[\"']", "hintOnFail": "Set -Status to '5 of 20'." },
+      { "rule": "regex", "pattern": "-PercentComplete\\s+25", "hintOnFail": "Set -PercentComplete to 25." }
+    ],
+    "solution": "Write-Progress -Activity \"Processing items\" -Status \"5 of 20\" -PercentComplete 25",
+    "explanation": "Write-Progress displays a progress bar in the console. -Activity is the header text, -Status shows details, and -PercentComplete fills the bar proportionally."
+  }
+]

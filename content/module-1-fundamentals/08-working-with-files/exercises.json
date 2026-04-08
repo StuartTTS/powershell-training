@@ -1,1 +1,96 @@
-[]
+[
+  {
+    "id": "m1-l8-ex1",
+    "type": "syntax-check",
+    "prompt": "Write a command to read the contents of the file 'data.txt' and store the result in a variable called $content.",
+    "hints": [
+      "Use the Get-Content cmdlet.",
+      "Specify the file path with the -Path parameter.",
+      "Assign the result to $content with the = operator."
+    ],
+    "validation": [
+      { "rule": "contains", "value": "Get-Content", "hintOnFail": "Use Get-Content to read the file." },
+      { "rule": "regex", "pattern": "data\\.txt", "hintOnFail": "Specify 'data.txt' as the file path." },
+      { "rule": "regex", "pattern": "\\$content\\s*=", "hintOnFail": "Assign the result to a variable called $content." }
+    ],
+    "solution": "$content = Get-Content -Path 'data.txt'",
+    "explanation": "Get-Content reads a file and returns an array of strings (one per line). Storing it in $content lets you work with the data later."
+  },
+  {
+    "id": "m1-l8-ex2",
+    "type": "syntax-check",
+    "prompt": "Write a command to append the text 'Task completed' to a file called 'log.txt' using Add-Content.",
+    "hints": [
+      "Add-Content appends to a file instead of overwriting.",
+      "Use -Path for the file and -Value for the text.",
+      "Don't use Set-Content — that overwrites the file."
+    ],
+    "validation": [
+      { "rule": "contains", "value": "Add-Content", "hintOnFail": "Use Add-Content to append to the file." },
+      { "rule": "regex", "pattern": "log\\.txt", "hintOnFail": "Specify 'log.txt' as the file path." },
+      { "rule": "regex", "pattern": "Task completed", "hintOnFail": "Set the value to 'Task completed'." },
+      { "rule": "forbidden", "value": "Set-Content", "hintOnFail": "Use Add-Content (not Set-Content) to append without overwriting." }
+    ],
+    "solution": "Add-Content -Path 'log.txt' -Value 'Task completed'",
+    "explanation": "Add-Content appends the specified value to the end of the file, preserving existing content. Set-Content would overwrite the file entirely."
+  },
+  {
+    "id": "m1-l8-ex3",
+    "type": "syntax-check",
+    "prompt": "Write a command that imports 'employees.csv' and pipes the result to Where-Object to filter rows where the Department property equals 'Sales', then exports the result to 'sales-team.csv' with -NoTypeInformation.",
+    "hints": [
+      "Start with Import-Csv, then pipe to Where-Object, then pipe to Export-Csv.",
+      "Use $_.Department -eq 'Sales' in the Where-Object filter.",
+      "Add -NoTypeInformation to Export-Csv to omit the type header."
+    ],
+    "validation": [
+      { "rule": "contains", "value": "Import-Csv", "hintOnFail": "Start by reading the CSV with Import-Csv." },
+      { "rule": "contains", "value": "Where-Object", "hintOnFail": "Pipe to Where-Object to filter the data." },
+      { "rule": "contains", "value": "Export-Csv", "hintOnFail": "Pipe the filtered results to Export-Csv." },
+      { "rule": "regex", "pattern": "employees\\.csv", "hintOnFail": "Import from 'employees.csv'." },
+      { "rule": "regex", "pattern": "sales-team\\.csv", "hintOnFail": "Export to 'sales-team.csv'." },
+      { "rule": "contains", "value": "-NoTypeInformation", "hintOnFail": "Add the -NoTypeInformation switch to Export-Csv." },
+      { "rule": "structure", "check": "has-pipeline", "hintOnFail": "Use the pipeline | to connect the cmdlets." }
+    ],
+    "solution": "Import-Csv -Path 'employees.csv' | Where-Object { $_.Department -eq 'Sales' } | Export-Csv -Path 'sales-team.csv' -NoTypeInformation",
+    "explanation": "Import-Csv converts each CSV row into an object. Where-Object filters those objects. Export-Csv writes the filtered objects back to a new CSV file. -NoTypeInformation removes the #TYPE header line."
+  },
+  {
+    "id": "m1-l8-ex4",
+    "type": "syntax-check",
+    "prompt": "Write code that reads 'config.json' as a single string using Get-Content with -Raw, then converts it from JSON into an object stored in $config.",
+    "hints": [
+      "Use Get-Content with the -Raw switch to read the file as one string.",
+      "Pipe the result to ConvertFrom-Json.",
+      "Store the final result in $config."
+    ],
+    "validation": [
+      { "rule": "contains", "value": "Get-Content", "hintOnFail": "Use Get-Content to read the file." },
+      { "rule": "contains", "value": "-Raw", "hintOnFail": "Add the -Raw switch to read the entire file as a single string." },
+      { "rule": "contains", "value": "ConvertFrom-Json", "hintOnFail": "Pipe to ConvertFrom-Json to parse the JSON." },
+      { "rule": "regex", "pattern": "config\\.json", "hintOnFail": "Read from the file 'config.json'." },
+      { "rule": "regex", "pattern": "\\$config\\s*=", "hintOnFail": "Store the result in a variable called $config." }
+    ],
+    "solution": "$config = Get-Content -Path 'config.json' -Raw | ConvertFrom-Json",
+    "explanation": "-Raw ensures Get-Content returns the entire file as a single string rather than an array of lines. ConvertFrom-Json then parses that string into a PowerShell object."
+  },
+  {
+    "id": "m1-l8-ex5",
+    "type": "syntax-check",
+    "prompt": "Use Join-Path to combine $HOME and 'Documents\\report.txt' into a full file path, and store it in $fullPath.",
+    "hints": [
+      "Join-Path takes -Path and -ChildPath parameters.",
+      "$HOME is a built-in variable for the user's home directory.",
+      "Assign the result to $fullPath."
+    ],
+    "validation": [
+      { "rule": "contains", "value": "Join-Path", "hintOnFail": "Use the Join-Path cmdlet." },
+      { "rule": "regex", "pattern": "\\$HOME", "hintOnFail": "Use $HOME as the base path." },
+      { "rule": "regex", "pattern": "Documents", "hintOnFail": "Include 'Documents' in the child path." },
+      { "rule": "regex", "pattern": "report\\.txt", "hintOnFail": "Include 'report.txt' in the child path." },
+      { "rule": "regex", "pattern": "\\$fullPath\\s*=", "hintOnFail": "Store the result in $fullPath." }
+    ],
+    "solution": "$fullPath = Join-Path -Path $HOME -ChildPath 'Documents\\report.txt'",
+    "explanation": "Join-Path safely combines path segments using the correct directory separator for the platform, avoiding issues with missing or doubled backslashes."
+  }
+]

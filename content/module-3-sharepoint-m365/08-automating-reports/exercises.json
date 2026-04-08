@@ -1,1 +1,97 @@
-[]
+[
+  {
+    "id": "m3-l8-ex1",
+    "type": "syntax-check",
+    "prompt": "Write a pipeline that gets all users with their DisplayName and Department, selects those two properties, and exports the result to 'C:\\Reports\\users.csv' without type information.",
+    "hints": [
+      "Start with Get-MgUser -All -Property to request the fields.",
+      "Pipe to Select-Object to pick DisplayName and Department.",
+      "Pipe to Export-Csv with -NoTypeInformation."
+    ],
+    "validation": [
+      { "rule": "contains", "value": "Get-MgUser", "hintOnFail": "Start with Get-MgUser to retrieve users." },
+      { "rule": "contains", "value": "Select-Object", "hintOnFail": "Pipe to Select-Object to choose properties." },
+      { "rule": "contains", "value": "Export-Csv", "hintOnFail": "Pipe to Export-Csv to write the results to a file." },
+      { "rule": "contains", "value": "-NoTypeInformation", "hintOnFail": "Add -NoTypeInformation to prevent the #TYPE header row." },
+      { "rule": "regex", "pattern": "C:\\\\Reports\\\\users\\.csv|C:/Reports/users\\.csv", "hintOnFail": "Export to 'C:\\Reports\\users.csv'." },
+      { "rule": "order", "sequence": ["Get-MgUser", "Select-Object", "Export-Csv"], "hintOnFail": "The pipeline order should be: Get-MgUser | Select-Object | Export-Csv." }
+    ],
+    "solution": "Get-MgUser -All -Property DisplayName, Department | Select-Object DisplayName, Department | Export-Csv -Path \"C:\\Reports\\users.csv\" -NoTypeInformation",
+    "explanation": "This pipeline retrieves users, selects specific properties for a clean output, and exports to CSV. The -NoTypeInformation switch removes the metadata header row from the file."
+  },
+  {
+    "id": "m3-l8-ex2",
+    "type": "syntax-check",
+    "prompt": "Write a pipeline that gets all lists from the current SharePoint site and displays them in a table with Title, ItemCount, and LastItemModifiedDate columns. Use -AutoSize for better formatting.",
+    "hints": [
+      "Use Get-PnPList to retrieve all lists.",
+      "Pipe to Format-Table with the column names.",
+      "Add -AutoSize for cleaner column widths."
+    ],
+    "validation": [
+      { "rule": "contains", "value": "Get-PnPList", "hintOnFail": "Use Get-PnPList to retrieve lists." },
+      { "rule": "contains", "value": "Format-Table", "hintOnFail": "Pipe to Format-Table for tabular display." },
+      { "rule": "contains", "value": "Title", "hintOnFail": "Include the Title column." },
+      { "rule": "contains", "value": "ItemCount", "hintOnFail": "Include the ItemCount column." },
+      { "rule": "contains", "value": "LastItemModifiedDate", "hintOnFail": "Include the LastItemModifiedDate column." },
+      { "rule": "contains", "value": "-AutoSize", "hintOnFail": "Add -AutoSize for better column formatting." }
+    ],
+    "solution": "Get-PnPList | Format-Table Title, ItemCount, LastItemModifiedDate -AutoSize",
+    "explanation": "Get-PnPList returns all lists on the site. Format-Table presents them in a readable table. -AutoSize adjusts column widths to fit the data. Remember: Format-Table is for display only, not for exporting."
+  },
+  {
+    "id": "m3-l8-ex3",
+    "type": "syntax-check",
+    "prompt": "Write a pipeline that gets all users, sorts them by DisplayName in ascending order, and then formats the output as a list showing all properties.",
+    "hints": [
+      "Start with Get-MgUser -All.",
+      "Pipe to Sort-Object with the DisplayName property.",
+      "Pipe to Format-List with * to show all properties."
+    ],
+    "validation": [
+      { "rule": "contains", "value": "Get-MgUser", "hintOnFail": "Use Get-MgUser to retrieve users." },
+      { "rule": "contains", "value": "Sort-Object", "hintOnFail": "Pipe to Sort-Object to sort the results." },
+      { "rule": "contains", "value": "DisplayName", "hintOnFail": "Sort by the DisplayName property." },
+      { "rule": "contains", "value": "Format-List", "hintOnFail": "Pipe to Format-List for detailed output." },
+      { "rule": "order", "sequence": ["Get-MgUser", "Sort-Object", "Format-List"], "hintOnFail": "The order should be: Get-MgUser | Sort-Object | Format-List." }
+    ],
+    "solution": "Get-MgUser -All | Sort-Object DisplayName | Format-List *",
+    "explanation": "Sort-Object arranges the users alphabetically by DisplayName. Format-List * displays every property of each user in a vertical list format, which is useful for detailed inspection."
+  },
+  {
+    "id": "m3-l8-ex4",
+    "type": "syntax-check",
+    "prompt": "Write a Select-Object expression that takes $users and creates output with a 'Name' column from DisplayName and a 'Email' column from UserPrincipalName, using calculated properties.",
+    "hints": [
+      "Pipe $users to Select-Object.",
+      "Calculated properties use: @{Name=\"...\"; Expression={$_.PropertyName}}.",
+      "Create two calculated properties: one for Name and one for Email."
+    ],
+    "validation": [
+      { "rule": "contains", "value": "$users", "hintOnFail": "Start with $users as the input." },
+      { "rule": "contains", "value": "Select-Object", "hintOnFail": "Pipe to Select-Object." },
+      { "rule": "regex", "pattern": "Name\\s*=\\s*[\"']Name[\"']", "hintOnFail": "Create a calculated property with Name='Name'." },
+      { "rule": "contains", "value": "DisplayName", "hintOnFail": "Map the Name column from DisplayName using $_.DisplayName." },
+      { "rule": "regex", "pattern": "Name\\s*=\\s*[\"']Email[\"']", "hintOnFail": "Create a calculated property with Name='Email'." },
+      { "rule": "contains", "value": "UserPrincipalName", "hintOnFail": "Map the Email column from UserPrincipalName using $_.UserPrincipalName." }
+    ],
+    "solution": "$users | Select-Object @{Name=\"Name\"; Expression={$_.DisplayName}}, @{Name=\"Email\"; Expression={$_.UserPrincipalName}}",
+    "explanation": "Calculated properties in Select-Object let you rename columns and transform data. Each calculated property is a hashtable with Name (output column name) and Expression (script block that computes the value)."
+  },
+  {
+    "id": "m3-l8-ex5",
+    "type": "syntax-check",
+    "prompt": "Write the command you would use as a Task Scheduler action argument to run a PowerShell 7 script located at 'C:\\Scripts\\report.ps1'. Just write the argument string that follows pwsh.exe.",
+    "hints": [
+      "Task Scheduler runs pwsh.exe with arguments.",
+      "The -File parameter tells PowerShell to run a script.",
+      "The argument is: -File \"C:\\Scripts\\report.ps1\""
+    ],
+    "validation": [
+      { "rule": "contains", "value": "-File", "hintOnFail": "Use the -File parameter to specify the script path." },
+      { "rule": "regex", "pattern": "C:\\\\Scripts\\\\report\\.ps1|C:/Scripts/report\\.ps1", "hintOnFail": "Specify the script path 'C:\\Scripts\\report.ps1'." }
+    ],
+    "solution": "-File \"C:\\Scripts\\report.ps1\"",
+    "explanation": "When configuring Task Scheduler, you set the program to pwsh.exe and the arguments to -File followed by the script path. The -File parameter tells PowerShell to execute the specified script."
+  }
+]
