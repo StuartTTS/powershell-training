@@ -1,0 +1,7 @@
+{
+  "title": "What is PowerShell?",
+  "description": "Introduction to PowerShell — cmdlets, the pipeline, and Get-Help.",
+  "slug": "what-is-powershell",
+  "order": 1,
+  "prerequisites": []
+}

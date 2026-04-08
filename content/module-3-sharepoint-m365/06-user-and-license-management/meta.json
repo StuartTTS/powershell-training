@@ -1,0 +1,7 @@
+{
+  "title": "User and License Management",
+  "description": "Microsoft Graph PowerShell for users and licenses.",
+  "slug": "user-and-license-management",
+  "order": 6,
+  "prerequisites": ["m3-l5"]
+}

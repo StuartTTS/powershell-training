@@ -1,0 +1,7 @@
+{
+  "title": "Working with REST APIs",
+  "description": "Using Invoke-RestMethod to call APIs.",
+  "slug": "rest-apis",
+  "order": 3,
+  "prerequisites": ["m2-l2"]
+}

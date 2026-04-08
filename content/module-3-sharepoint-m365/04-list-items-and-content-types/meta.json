@@ -1,0 +1,7 @@
+{
+  "title": "List Items and Content Types",
+  "description": "Working with list data and content types.",
+  "slug": "list-items-and-content-types",
+  "order": 4,
+  "prerequisites": ["m3-l3"]
+}

@@ -1,0 +1,7 @@
+{
+  "title": "Working with Files",
+  "description": "Reading and writing CSV, JSON, and text files.",
+  "slug": "working-with-files",
+  "order": 8,
+  "prerequisites": ["m1-l7"]
+}

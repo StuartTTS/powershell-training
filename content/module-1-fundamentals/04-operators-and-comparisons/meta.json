@@ -1,0 +1,7 @@
+{
+  "title": "Operators and Comparisons",
+  "description": "Comparison, logical, and arithmetic operators.",
+  "slug": "operators-and-comparisons",
+  "order": 4,
+  "prerequisites": ["m1-l3"]
+}

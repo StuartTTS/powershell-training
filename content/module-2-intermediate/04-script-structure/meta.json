@@ -1,0 +1,7 @@
+{
+  "title": "Script Structure and Best Practices",
+  "description": "Organizing scripts for maintainability.",
+  "slug": "script-structure",
+  "order": 4,
+  "prerequisites": ["m2-l3"]
+}

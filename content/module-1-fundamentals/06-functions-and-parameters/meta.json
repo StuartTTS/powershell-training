@@ -1,0 +1,7 @@
+{
+  "title": "Functions and Parameters",
+  "description": "Writing reusable functions with parameters.",
+  "slug": "functions-and-parameters",
+  "order": 6,
+  "prerequisites": ["m1-l5"]
+}

@@ -1,0 +1,7 @@
+{
+  "title": "Control Flow",
+  "description": "If/else, switch, foreach, and while loops.",
+  "slug": "control-flow",
+  "order": 5,
+  "prerequisites": ["m1-l4"]
+}

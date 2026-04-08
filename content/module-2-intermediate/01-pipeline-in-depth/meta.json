@@ -1,0 +1,7 @@
+{
+  "title": "The Pipeline in Depth",
+  "description": "Where-Object, Select-Object, Sort-Object, ForEach-Object.",
+  "slug": "pipeline-in-depth",
+  "order": 1,
+  "prerequisites": []
+}

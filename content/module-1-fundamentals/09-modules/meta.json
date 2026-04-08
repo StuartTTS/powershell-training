@@ -1,0 +1,7 @@
+{
+  "title": "Modules",
+  "description": "Installing and importing PowerShell modules.",
+  "slug": "modules",
+  "order": 9,
+  "prerequisites": ["m1-l8"]
+}

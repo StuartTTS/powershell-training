@@ -1,0 +1,7 @@
+{
+  "title": "Managing SharePoint Sites and Lists",
+  "description": "Creating and managing sites and lists.",
+  "slug": "sharepoint-sites-and-lists",
+  "order": 2,
+  "prerequisites": ["m3-l1"]
+}

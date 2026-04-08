@@ -1,0 +1,7 @@
+{
+  "title": "Managing Teams and Groups",
+  "description": "Administer Teams and M365 Groups.",
+  "slug": "teams-and-groups",
+  "order": 5,
+  "prerequisites": ["m3-l4"]
+}

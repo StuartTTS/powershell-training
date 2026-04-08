@@ -1,0 +1,52 @@
+[
+  {
+    "id": "m1-l1-ex1",
+    "type": "syntax-check",
+    "prompt": "Write the cmdlet that displays help information for the Get-Service cmdlet.",
+    "hints": [
+      "The help cmdlet follows the Verb-Noun pattern too.",
+      "The verb is 'Get' and the noun is 'Help'.",
+      "Try: Get-Help Get-Service"
+    ],
+    "validation": [
+      { "rule": "contains", "value": "Get-Help", "hintOnFail": "Use the Get-Help cmdlet." },
+      { "rule": "contains", "value": "Get-Service", "hintOnFail": "Pass Get-Service as the argument to Get-Help." }
+    ],
+    "solution": "Get-Help Get-Service",
+    "explanation": "Get-Help followed by a cmdlet name shows you documentation for that cmdlet."
+  },
+  {
+    "id": "m1-l1-ex2",
+    "type": "syntax-check",
+    "prompt": "Write a command that finds all cmdlets with the verb 'Set'.",
+    "hints": [
+      "Use Get-Command to discover cmdlets.",
+      "Get-Command has a -Verb parameter.",
+      "Try: Get-Command -Verb Set"
+    ],
+    "validation": [
+      { "rule": "contains", "value": "Get-Command", "hintOnFail": "Use the Get-Command cmdlet to discover commands." },
+      { "rule": "regex", "pattern": "-Verb\\s+['\"]?Set['\"]?", "hintOnFail": "Use the -Verb parameter with 'Set'." }
+    ],
+    "solution": "Get-Command -Verb Set",
+    "explanation": "Get-Command -Verb Set returns all cmdlets that use the Set verb, helping you discover what you can configure."
+  },
+  {
+    "id": "m1-l1-ex3",
+    "type": "syntax-check",
+    "prompt": "Write a pipeline that gets all processes and pipes them to Where-Object to filter for processes where the name equals 'explorer'.",
+    "hints": [
+      "Start with Get-Process, then pipe with |",
+      "Where-Object uses a script block { } with $_ to reference each object.",
+      "Try: Get-Process | Where-Object { $_.Name -eq 'explorer' }"
+    ],
+    "validation": [
+      { "rule": "contains", "value": "Get-Process", "hintOnFail": "Start with the Get-Process cmdlet." },
+      { "rule": "contains", "value": "|", "hintOnFail": "Use the pipeline operator | to pass objects." },
+      { "rule": "contains", "value": "Where-Object", "hintOnFail": "Pipe to Where-Object to filter results." },
+      { "rule": "regex", "pattern": "\\$_\\.Name\\s+-eq", "hintOnFail": "Use $_.Name -eq to compare the process name." }
+    ],
+    "solution": "Get-Process | Where-Object { $_.Name -eq 'explorer' }",
+    "explanation": "The pipeline passes process objects to Where-Object, which filters them using the script block condition."
+  }
+]

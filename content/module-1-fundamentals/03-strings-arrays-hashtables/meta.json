@@ -1,0 +1,7 @@
+{
+  "title": "Strings, Arrays, and Hashtables",
+  "description": "Working with strings, arrays, and hashtable collections.",
+  "slug": "strings-arrays-hashtables",
+  "order": 3,
+  "prerequisites": ["m1-l2"]
+}

@@ -1,0 +1,7 @@
+{
+  "title": "Bulk Operations",
+  "description": "CSV-driven provisioning and bulk changes.",
+  "slug": "bulk-operations",
+  "order": 7,
+  "prerequisites": ["m3-l6"]
+}

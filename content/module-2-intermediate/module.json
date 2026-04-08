@@ -1,0 +1,6 @@
+{
+  "title": "Intermediate PowerShell",
+  "description": "Go deeper with pipelines, regex, REST APIs, remoting, and script best practices.",
+  "slug": "intermediate",
+  "order": 2
+}

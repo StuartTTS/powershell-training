@@ -1,0 +1,7 @@
+{
+  "title": "Variables and Data Types",
+  "description": "Introduction to PowerShell variables, types, and type casting.",
+  "slug": "variables-and-types",
+  "order": 2,
+  "prerequisites": ["m1-l1"]
+}

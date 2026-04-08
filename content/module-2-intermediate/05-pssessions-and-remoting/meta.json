@@ -1,0 +1,7 @@
+{
+  "title": "PSSessions and Remoting",
+  "description": "Remote execution with PowerShell.",
+  "slug": "pssessions-and-remoting",
+  "order": 5,
+  "prerequisites": ["m2-l4"]
+}

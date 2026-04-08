@@ -1,0 +1,7 @@
+{
+  "title": "Automating Reports and Exports",
+  "description": "Generate reports and export data.",
+  "slug": "automating-reports",
+  "order": 8,
+  "prerequisites": ["m3-l7"]
+}

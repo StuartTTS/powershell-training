@@ -1,0 +1,7 @@
+{
+  "title": "Error Handling",
+  "description": "Try/catch and ErrorActionPreference.",
+  "slug": "error-handling",
+  "order": 7,
+  "prerequisites": ["m1-l6"]
+}

@@ -1,0 +1,7 @@
+{
+  "title": "Managing Site Permissions",
+  "description": "Permissions and sharing in SharePoint.",
+  "slug": "site-permissions",
+  "order": 3,
+  "prerequisites": ["m3-l2"]
+}

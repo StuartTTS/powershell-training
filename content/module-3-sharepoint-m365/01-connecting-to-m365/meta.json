@@ -1,0 +1,7 @@
+{
+  "title": "Connecting to M365",
+  "description": "Install and connect PnP.PowerShell.",
+  "slug": "connecting-to-m365",
+  "order": 1,
+  "prerequisites": []
+}
