@@ -114,7 +114,7 @@ Slugs are derived from directory names (e.g., `module-1-fundamentals` → `funda
 
 ### Phase 1: Client-Side Validation
 
-Each exercise defines validation rules in its JSON file. **All rules must pass** (AND logic). When multiple rules fail, the hint for the **first failing rule** is shown.
+Each exercise defines validation rules in its JSON file. **All rules must pass** (AND logic). When multiple rules fail, the hint for the **first failing rule** is shown. If a failing rule has no `hintOnFail`, the generic message "Not quite — check your answer and try again" is shown.
 
 | Rule Type | What it checks | Example |
 |-----------|---------------|---------|
@@ -197,19 +197,33 @@ Each exercise defines validation rules in its JSON file. **All rules must pass**
 ```
 /content
   /module-1-fundamentals
+    module.json          # module-level metadata
     /01-what-is-powershell
       lesson.md          # explanation with examples
       exercises.json     # array of exercises
-      meta.json          # title, description, order, prerequisites
+      meta.json          # lesson-level metadata
     /02-variables-and-types
       ...
   /module-2-intermediate
+    module.json
     ...
   /module-3-sharepoint-m365
+    module.json
     ...
 ```
 
-### meta.json Schema
+### module.json Schema
+
+```json
+{
+  "title": "string — display title, e.g. 'PowerShell Fundamentals'",
+  "description": "string — summary for the home page card",
+  "slug": "string — URL slug, e.g. 'fundamentals'",
+  "order": "number — integer for module sort order (1, 2, 3)"
+}
+```
+
+### meta.json Schema (Lesson-Level)
 
 ```json
 {
