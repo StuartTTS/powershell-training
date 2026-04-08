@@ -1,7 +1,4 @@
-import fs from "fs";
-import path from "path";
-
-const CONTENT_DIR = path.join(process.cwd(), "content");
+import contentData from "./content-data.json";
 
 export interface ModuleMeta {
   title: string;
@@ -47,100 +44,49 @@ export interface Lesson {
 export interface Module {
   meta: ModuleMeta;
   lessons: LessonMeta[];
-  dirName: string;
 }
 
+interface ContentModule {
+  meta: ModuleMeta;
+  lessons: {
+    meta: LessonMeta;
+    content: string;
+    exercises: Exercise[];
+  }[];
+}
+
+const modules: ContentModule[] = contentData as ContentModule[];
+
 export function getModules(): Module[] {
-  const moduleDirs = fs
-    .readdirSync(CONTENT_DIR)
-    .filter((dir) =>
-      fs.statSync(path.join(CONTENT_DIR, dir)).isDirectory()
-    );
-
-  return moduleDirs
-    .map((dirName) => {
-      const modulePath = path.join(CONTENT_DIR, dirName, "module.json");
-      const meta: ModuleMeta = JSON.parse(
-        fs.readFileSync(modulePath, "utf-8")
-      );
-
-      const lessonDirs = fs
-        .readdirSync(path.join(CONTENT_DIR, dirName))
-        .filter(
-          (ld) =>
-            fs
-              .statSync(path.join(CONTENT_DIR, dirName, ld))
-              .isDirectory()
-        );
-
-      const lessons = lessonDirs
-        .map((ld) => {
-          const metaPath = path.join(
-            CONTENT_DIR,
-            dirName,
-            ld,
-            "meta.json"
-          );
-          return JSON.parse(
-            fs.readFileSync(metaPath, "utf-8")
-          ) as LessonMeta;
-        })
-        .sort((a, b) => a.order - b.order);
-
-      return { meta, lessons, dirName };
-    })
-    .sort((a, b) => a.meta.order - b.meta.order);
+  return modules.map((m) => ({
+    meta: m.meta,
+    lessons: m.lessons.map((l) => l.meta),
+  }));
 }
 
 export function getModuleBySlug(slug: string): Module | undefined {
-  return getModules().find((m) => m.meta.slug === slug);
+  const mod = modules.find((m) => m.meta.slug === slug);
+  if (!mod) return undefined;
+  return {
+    meta: mod.meta,
+    lessons: mod.lessons.map((l) => l.meta),
+  };
 }
 
 export function getLesson(
   moduleSlug: string,
   lessonSlug: string
 ): Lesson | undefined {
-  const modules = getModules();
   const mod = modules.find((m) => m.meta.slug === moduleSlug);
   if (!mod) return undefined;
 
-  const lessonMeta = mod.lessons.find((l) => l.slug === lessonSlug);
-  if (!lessonMeta) return undefined;
-
-  // Find the lesson directory by matching slug
-  const lessonDirs = fs
-    .readdirSync(path.join(CONTENT_DIR, mod.dirName))
-    .filter((ld) =>
-      fs
-        .statSync(path.join(CONTENT_DIR, mod.dirName, ld))
-        .isDirectory()
-    );
-
-  const lessonDir = lessonDirs.find((ld) => {
-    const meta: LessonMeta = JSON.parse(
-      fs.readFileSync(
-        path.join(CONTENT_DIR, mod.dirName, ld, "meta.json"),
-        "utf-8"
-      )
-    );
-    return meta.slug === lessonSlug;
-  });
-
-  if (!lessonDir) return undefined;
-
-  const lessonPath = path.join(CONTENT_DIR, mod.dirName, lessonDir);
-  const content = fs.readFileSync(
-    path.join(lessonPath, "lesson.md"),
-    "utf-8"
-  );
-  const exercises: Exercise[] = JSON.parse(
-    fs.readFileSync(path.join(lessonPath, "exercises.json"), "utf-8")
-  );
+  const lesson = mod.lessons.find((l) => l.meta.slug === lessonSlug);
+  if (!lesson) return undefined;
 
   return {
-    meta: lessonMeta,
-    content,
-    exercises,
+    meta: lesson.meta,
+    content: lesson.content,
+    exercises: lesson.exercises as Exercise[],
     moduleSlug,
   };
 }
@@ -149,14 +95,13 @@ export function getAllLessonPaths(): {
   moduleSlug: string;
   lessonSlug: string;
 }[] {
-  const modules = getModules();
   const paths: { moduleSlug: string; lessonSlug: string }[] = [];
 
   for (const mod of modules) {
     for (const lesson of mod.lessons) {
       paths.push({
         moduleSlug: mod.meta.slug,
-        lessonSlug: lesson.slug,
+        lessonSlug: lesson.meta.slug,
       });
     }
   }
