@@ -89,6 +89,20 @@ Home (course overview + progress summary)
 - **Progress tracker** — localStorage-based, tracks completed exercises per module
 - **Navigation** — sidebar with modules/lessons, progress indicators, current position
 
+### URL Routing
+
+```
+/                                          → Home (dashboard)
+/module/[moduleSlug]                       → Module overview
+/module/[moduleSlug]/[lessonSlug]          → Lesson page with exercises
+```
+
+Examples:
+- `/module/fundamentals/variables-and-types`
+- `/module/sharepoint-m365/managing-sites-and-lists`
+
+Slugs are derived from directory names (e.g., `module-1-fundamentals` → `fundamentals`, `01-what-is-powershell` → `what-is-powershell`). The numeric prefix is stripped from the slug but used for sort order.
+
 ### Exercise Types
 
 - `syntax-check` — validates pattern/structure locally (Phase 1)
@@ -100,7 +114,7 @@ Home (course overview + progress summary)
 
 ### Phase 1: Client-Side Validation
 
-Each exercise defines validation rules in its JSON file:
+Each exercise defines validation rules in its JSON file. **All rules must pass** (AND logic). When multiple rules fail, the hint for the **first failing rule** is shown.
 
 | Rule Type | What it checks | Example |
 |-----------|---------------|---------|
@@ -121,7 +135,35 @@ Each exercise defines validation rules in its JSON file:
 - Exercises tagged `execution-required` show: "This exercise works best when run against a real M365 tenant. Copy this to your local terminal and try it there."
 - JSON schema includes `executionConfig` field (ignored in Phase 1) for future backend pickup
 
-### Example Exercise JSON
+### Exercise JSON Schema
+
+```json
+{
+  "id": "string (required) — format: m{module}-l{lesson}-ex{number}, e.g. m1-l2-ex3",
+  "type": "string (required) — 'syntax-check' | 'execution-required'",
+  "prompt": "string (required) — the task description shown to the user",
+  "hints": ["string[] (required) — 1-3 progressive hints, shown one at a time"],
+  "validation": [
+    {
+      "rule": "string (required) — 'contains' | 'regex' | 'structure' | 'order' | 'forbidden'",
+      "value": "string (for contains/forbidden) — literal text to check for",
+      "pattern": "string (for regex) — regex pattern to match",
+      "check": "string (for structure) — 'has-function' | 'has-param-block' | 'has-try-catch' | 'has-pipeline'",
+      "sequence": ["string[] (for order) — ordered list of keywords/cmdlets"],
+      "hintOnFail": "string (optional) — custom hint shown when this specific rule fails"
+    }
+  ],
+  "solution": "string (required) — the reference solution",
+  "explanation": "string (required) — why the solution works",
+  "executionConfig": {
+    "requiresConnection": "string (optional, Phase 2) — 'PnP.PowerShell' | 'MicrosoftGraph' | null",
+    "expectedOutputPattern": "string (optional, Phase 2) — regex to validate command output",
+    "cleanup": "string (optional, Phase 2) — PowerShell command to run after exercise to undo changes"
+  }
+}
+```
+
+### Example Exercise
 
 ```json
 {
@@ -134,13 +176,17 @@ Each exercise defines validation rules in its JSON file:
     "Try: $servers = @('server1', 'server2', 'server3')"
   ],
   "validation": [
-    { "rule": "regex", "pattern": "\\$servers\\s*=\\s*@\\(" },
-    { "rule": "contains", "value": "," }
+    { "rule": "regex", "pattern": "\\$servers\\s*=\\s*@\\(", "hintOnFail": "Use $servers = @(...) to create an array" },
+    { "rule": "contains", "value": ",", "hintOnFail": "Separate array items with commas" }
   ],
   "solution": "$servers = @('Server01', 'Server02', 'Server03')",
   "explanation": "Arrays are created with @() and items separated by commas."
 }
 ```
+
+### Known Phase 1 Limitations
+
+- Pattern-based validation can be gamed (e.g., putting required keywords in comments). Accepted trade-off — this is a personal learning tool, not an exam system.
 
 ---
 
@@ -163,30 +209,64 @@ Each exercise defines validation rules in its JSON file:
     ...
 ```
 
-### Lesson Format
+### meta.json Schema
+
+```json
+{
+  "title": "string — display title, e.g. 'Variables and Data Types'",
+  "description": "string — one-line summary for the module overview page",
+  "slug": "string — URL slug, e.g. 'variables-and-types'",
+  "order": "number — integer for sort order (matches directory prefix)",
+  "prerequisites": ["string[] — array of lesson IDs, e.g. ['m1-l1']. Empty array for first lesson."]
+}
+```
+
+### Lesson Markdown Format
 
 - Short explanation (200-400 words per lesson)
-- Code examples with syntax highlighting
-- "Key concept" callout boxes
+- Code examples with syntax highlighting (fenced code blocks with `powershell` language tag)
+- Key concept callouts use blockquote with bold prefix: `> **Key Concept:** ...`
 - Self-contained — no assumed knowledge beyond completed prerequisites
 
-### Microsoft Learn Verification
+Example:
 
-- Before writing each lesson, query microsoft_docs_search and microsoft_code_sample_search for relevant cmdlets and concepts
+```markdown
+## Variables
+
+In PowerShell, variables start with a `$` sign...
+
+> **Key Concept:** PowerShell variables are not strongly typed by default.
+
+```powershell
+$name = "Stuart"
+$count = 42
+```
+```
+
+### Microsoft Learn Verification (Authoring Guidance)
+
+This is guidance for the content authoring process (AI-assisted), not app functionality:
+
+- Before writing each lesson, query Microsoft Learn docs for relevant cmdlets and concepts
 - Cross-reference parameter names, syntax, and best practices against official docs
-- Use microsoft_docs_fetch for deeper detail when needed (e.g., SharePoint PnP cmdlet changes)
+- Fetch full documentation pages for deeper detail when needed (e.g., SharePoint PnP cmdlet changes)
 - Flag any cmdlets that have been deprecated or replaced
 
 ### Progress Storage (localStorage)
 
 ```json
 {
-  "m1-l1-ex1": { "completed": true, "attempts": 2 },
-  "m1-l1-ex2": { "completed": false, "attempts": 1 }
+  "version": 1,
+  "exercises": {
+    "m1-l1-ex1": { "completed": true, "attempts": 2 },
+    "m1-l1-ex2": { "completed": false, "attempts": 1 }
+  }
 }
 ```
 
-No auth required. Clearing browser data resets progress — acceptable for a personal training tool.
+- No auth required. Clearing browser data resets progress — acceptable for a personal training tool.
+- `version` field enables future data migration if schema changes.
+- If localStorage is unavailable (e.g., private browsing), the app works normally but progress is not persisted. Show a small banner: "Progress tracking unavailable in this browser mode."
 
 ---
 
@@ -202,13 +282,52 @@ No auth required. Clearing browser data resets progress — acceptable for a per
 
 - Lessons auto-advance to next exercise on completion; free navigation allowed (no forced linear progression)
 - Dark theme by default, light theme toggle available
-- Mobile-responsive but optimized for desktop
+- Mobile-responsive but optimized for desktop. On small screens (<768px), Monaco degrades to a styled `<textarea>` with monospace font
 - Each module shows a progress bar (e.g., "12/18 exercises completed")
 - Home page shows overall dashboard: modules as cards with progress rings
 
 ### Design Feel
 
 Clean and focused, not gamified. No points, badges, or streaks — just clear progress tracking. Professional tool, not a kids' coding game.
+
+---
+
+## Code Editor: Monaco Setup
+
+Monaco Editor does not ship with built-in PowerShell support. Implementation requires:
+
+1. Register a custom Monarch tokenizer for PowerShell syntax highlighting (keywords, cmdlets, variables, strings, comments)
+2. Lazy-load Monaco only on lesson pages to avoid bloating the home/module pages (~2-4MB gzipped)
+3. Show a loading skeleton while Monaco initializes
+
+If bundle size becomes problematic, CodeMirror 6 (~150KB) is a viable fallback.
+
+---
+
+## Deployment
+
+- **Build:** `next build` with `output: 'export'` in `next.config.js`
+- **Image handling:** `unoptimized: true` in next.config (Cloudflare Pages doesn't support Next.js image optimization)
+- **Deploy:** Connect GitHub repo to Cloudflare Pages; auto-deploys on push to `main`
+- **Build command (Cloudflare):** `npm run build`
+- **Output directory (Cloudflare):** `out`
+
+---
+
+## Testing Strategy
+
+- **Validation engine:** Unit tests (Vitest) — each rule type tested with passing and failing inputs
+- **Content loading:** Tests that all lesson markdown and exercise JSON files parse correctly
+- **Exercise schema:** Validate all exercise JSON files against the schema at build time
+- **E2E (future):** Playwright tests for core user flow — navigate to lesson, type answer, check validation feedback
+
+---
+
+## Scope
+
+- **Total exercises:** 23 lessons x 3-5 exercises = ~70-115 exercises
+- **SEO/discoverability:** Not a priority — this is a personal training tool. No OG images or sitemaps needed.
+- **Accessibility:** Keyboard navigation for exercise panel (Tab to editor, Enter to check). ARIA labels on progress indicators.
 
 ---
 
